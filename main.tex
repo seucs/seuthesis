@@ -1,0 +1,107 @@
+\documentclass[bachelor]{seuthesis} % 本科
+% \documentclass[master]{seuthesis} % 硕士
+% \documentclass[doctor]{seuthesis} % 博士
+% \documentclass[engineering]{seuthesis} % 工程硕士
+\usepackage{CJK,CJKnumb}
+ % 这里是导言区
+
+\begin{document}
+\categorynumber{000} % 分类采用《中国图书资料分类法》
+\UDC{000}            %《国际十进分类法UDC》的类号
+\secretlevel{公开}    %学位论文密级分为"公开"、"内部"、"秘密"和"机密"四种
+\studentid{09013125}   %学号要完整，前面的零不能省略。
+
+\title{基于深度学习的跟踪算法研究}{}{Thesis Title}{subtitle}
+\author{朴智新}{Zhixin Piao}
+\advisor{导师姓名}{教授}{Advisor's Name}{Prof.}
+\coadvisor{副导师}{副教授}{Co-advisor's Name}{Associate Prof.} % 没有
+
+% \degree{工学硕士} % 详细学位名称
+\major[12em]{计算机科学与技术}
+\defenddate{答辩日期}
+\authorizedate{学位授予日期}
+\department{计算机科学与工程}{department name}
+\duration{2007.11—2008.6}
+\address{河海院2楼}
+\thanks{本论文获国家XXX计划项目（2012AA00A00）和国家杰出青年科学基金项目（01234567）资助。}
+\maketitle
+
+\begin{abstract}{中文关键字}
+近年来，基于相关滤波的跟踪器的工作展现出了巨大的效力，尤其是对运动模糊和光照变化的挑战情况很好的鲁棒性。然而，由于这类模型强烈依赖于被跟踪对象的空间布局，它们对变形是众所周知的敏感。基于颜色统计的模型具有互补的特征，它们可以很好地处理形状的变化，但是光照变化会对结果造成强烈影响，而且仅考虑颜色分布的判别效果不够好。 在本文中，我们给出了一个基于线索互补的简单的岭回归框架，他的运行速度可以高达80 FPS，不仅胜过权威的VOT14比赛上的所有竞争对手，而且比起其他多个比赛中的主力跟踪器也毫不逊色。
+
+本文主要针对广泛研究的短期 (short-term) 单目标 (single-object) 跟踪，其输入只在第一帧中用矩形框指定目标。 短期意味着重检测(re-detection)是没有必要的。 在视频中跟踪陌生目标的主要难点是算法对目标外观变化的鲁棒性。没有训练样本预训练的陌生目标跟踪任务是非常有前景的，因为在大多数场合下提供一个这样的训练数据集是不现实的。在机器人、监视系统、视频处理、增强现实等计算密集型领域，这样的算法是极具优势的。
+
+由于目标的外观在整段视频中可能发生显著变化，因此单从第一帧预估出目标模型并使用这个固定模型来定位所有其他帧中的目标位置通常是没什么效果的。 因此，主流算法大多采用模自适应模型来利用后面帧的信息。 最简单、最广泛采取的方法是将跟踪器在新帧中的预测作为更新模型的训练数据。 从预测中学习的危险是一个小误差可以逐渐积累并导致模型漂移。尤其是当目标外观发生显著变化时特别容易发生。
+\end{abstract}
+
+\begin{englishabstract}{English Keywords}
+  English abstract.
+\end{englishabstract}
+
+\tableofcontents
+
+\begin{terminology}
+\begin{table}[h]
+%\Large
+\begin{tabular}{|>{\LARGE}m{0.2\textwidth}<{\centering}|m{0.8\textwidth}|}
+\hline
+\normalsize \hspace*{\stretch{1}}符号\hspace*{\stretch{1}} &
+        \hspace*{\stretch{1}}含义\hspace*{\stretch{1}} \\ 
+\hline
+a & 如同汉字起源于象形，拉丁字母表中的每个字母一开始都是描摹某种动物或物体形状的图画\\
+\hline
+b&和A一样，字母B也可以追溯到古代腓尼基。在腓尼基字母表中B叫beth,代表房屋，在希伯来语中B也叫beth，也含房屋之意。\\
+\hline
+c& 字母C在腓尼基人的文字中叫gimel，代表骆驼。它在字母表中的排列顺序和希腊字母Γ(gamma)相同，实际上其字形是从后者演变而来的。C在罗马数字中表示100。\\
+\hline
+d&D在古时是描摹拱门或门的形状而成的象形符号，在古代腓尼基语和希伯来语中叫做daleth，是“门”的意思，相当于希腊字母Δ（delta）。\\
+\hline
+\end{tabular}
+%\caption{my table}
+\end{table}
+
+\end{terminology}
+
+\begin{Main} % 开始正文
+
+\chapter{绪论(前言)}
+\section{研究的主要内容}
+\subsection{...}
+\subsubsection{...}
+\section{需要解决的问题}
+使得论文符合要求\cite{Yao:2015ix}\cite{seucover}。
+
+\chapter{...}
+...
+
+\end{Main} % 结束正文
+
+\begin{Acknowledgement}
+感谢……
+\end{Acknowledgement}
+
+% 参考文献
+\bibliography{seuthesis}
+
+\begin{Appendix}
+  \chapter{第一个附录}
+  ……
+\end{Appendix}
+
+\newpage
+\printindex % 索引
+
+%\begin{thebibliography}{99}
+
+
+%\bibliographystyle{ieee}
+%\bibliography{seuthesis}
+
+
+
+
+\begin{Resume}
+作者简介
+\end{Resume}
+
+\end{document}
