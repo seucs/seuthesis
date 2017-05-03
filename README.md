@@ -1,7 +1,7 @@
 # seu-latex
 基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。
 
-修复因latex版本更迭而产生的部分bug，增加对mac os的支持以及内容更丰富的示例注：（目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同）。
+修复因latex版本更迭而产生的部分bug，增加对mac os的支持以及内容更丰富的示例（注：目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同）。
 
 ### version 2.1.1 -- update 2017.05.03
 * 修复seuthesis在Linux下缺失Times New Roman的问题
