@@ -72,9 +72,6 @@
 \RequirePackage{CJKulem}
 
 % my change
-\RequirePackage{fontspec}
-
-% my change
 %\def\CJK@spaceChar{\hskip \f@size \p@}
 \def\CJKindent{%
     %\settowidth\CJK@twochars{\CJK@spaceChar\CJK@spaceChar}
@@ -118,7 +115,15 @@
 \newcommand{\kai}{\CJKfamily{zhkai}}
 \setCJKfamilyfont{zhfs}[Path = ./font/]{simfang.ttf}
 \newcommand{\fs}{\CJKfamily{zhfs}}
-\setmainfont{Times New Roman}% 英文默认Time New Roman
+
+% my change, 英文字体使用 Times New Roman
+\setmainfont[
+Path = ./font/,
+BoldFont=timesbd.ttf,
+ItalicFont=timesi.ttf,
+BoldItalicFont=timesbi.ttf
+]{times.ttf}
+
 \newcommand{\chuhao}{\fontsize{42pt}{46pt}\selectfont}
 \newcommand{\xiaochuhao}{\fontsize{36pt}{40pt}\selectfont}
 \newcommand{\yichu}{\fontsize{32pt}{36pt}\selectfont}
