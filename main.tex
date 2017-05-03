@@ -3,15 +3,23 @@
 % \documentclass[doctor]{seuthesis} % 博士
 % \documentclass[engineering]{seuthesis} % 工程硕士
 \usepackage{CJK,CJKnumb}
+\usepackage{amsmath} 
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
  % 这里是导言区
 
 \begin{document}
 \categorynumber{000} % 分类采用《中国图书资料分类法》
 \UDC{000}            %《国际十进分类法UDC》的类号
 \secretlevel{公开}    %学位论文密级分为"公开"、"内部"、"秘密"和"机密"四种
-\studentid{09013125}   %学号要完整，前面的零不能省略。
+\studentid{09013000}   %学号要完整，前面的零不能省略。
 
-\title{基于深度学习的跟踪算法研究}{}{Thesis Title}{subtitle}
+\title{基于深度学习的希腊字母研究}{}{Thesis Title}{subtitle}
 \author{朴智新}{Zhixin Piao}
 \advisor{导师姓名}{教授}{Advisor's Name}{Prof.}
 \coadvisor{副导师}{副教授}{Co-advisor's Name}{Associate Prof.} % 没有
@@ -26,16 +34,16 @@
 \thanks{本论文获国家XXX计划项目（2012AA00A00）和国家杰出青年科学基金项目（01234567）资助。}
 \maketitle
 
-\begin{abstract}{中文关键字}
-近年来，基于相关滤波的跟踪器的工作展现出了巨大的效力，尤其是对运动模糊和光照变化的挑战情况很好的鲁棒性。然而，由于这类模型强烈依赖于被跟踪对象的空间布局，它们对变形是众所周知的敏感。基于颜色统计的模型具有互补的特征，它们可以很好地处理形状的变化，但是光照变化会对结果造成强烈影响，而且仅考虑颜色分布的判别效果不够好。 在本文中，我们给出了一个基于线索互补的简单的岭回归框架，他的运行速度可以高达80 FPS，不仅胜过权威的VOT14比赛上的所有竞争对手，而且比起其他多个比赛中的主力跟踪器也毫不逊色。
+\begin{abstract}{希腊字母，腓尼基字母，语言，深度学习}
+希腊字母源自腓尼基字母。腓尼基字母只有辅音，从右向左写。希腊语的元音发达，希腊人增添了元音字母。因为希腊人的书写工具是蜡板，有时前一行从右向左写完后顺势就从左向右写，变成所谓“耕地”式书写，后来逐渐演变成全部从左向右写。字母的方向也颠倒了。罗马人引进希腊字母，略微改变变为拉丁字母，在世界广为流行。希腊字母广泛应用到学术领域，如数学等。
 
-本文主要针对广泛研究的短期 (short-term) 单目标 (single-object) 跟踪，其输入只在第一帧中用矩形框指定目标。 短期意味着重检测(re-detection)是没有必要的。 在视频中跟踪陌生目标的主要难点是算法对目标外观变化的鲁棒性。没有训练样本预训练的陌生目标跟踪任务是非常有前景的，因为在大多数场合下提供一个这样的训练数据集是不现实的。在机器人、监视系统、视频处理、增强现实等计算密集型领域，这样的算法是极具优势的。
-
-由于目标的外观在整段视频中可能发生显著变化，因此单从第一帧预估出目标模型并使用这个固定模型来定位所有其他帧中的目标位置通常是没什么效果的。 因此，主流算法大多采用模自适应模型来利用后面帧的信息。 最简单、最广泛采取的方法是将跟踪器在新帧中的预测作为更新模型的训练数据。 从预测中学习的危险是一个小误差可以逐渐积累并导致模型漂移。尤其是当目标外观发生显著变化时特别容易发生。
+希腊字母是希腊语所使用的字母，是世界上最早的有元音的字母，也广泛使用于数学、物理、生物、天文等学科。俄语等使用的西里尔字母也是由希腊字母演变而成。希腊字母进入了许多语言的词汇中，英语单字“alphabet”（字母表），源自拉丁语“alphabetum”，源自希腊语“αλφαβητον”，即为前两个希腊字母α（“Alpha”）及β（“Beta”）所合成，三角洲（“Delta”）这个词就来自希腊字母Δ，因为Δ是三角形。
 \end{abstract}
 
-\begin{englishabstract}{English Keywords}
-  English abstract.
+\begin{englishabstract}{Greek Alphabet, Phoenician Alphabet, Language, Deep Learning}
+The Greek alphabet has been used to write the Greek language since the late 9th century BC or early 8th century BC It was derived from the earlier Phoenician alphabet, and was the first alphabetic script to have distinct letters for vowels as well as consonants. It is the ancestor of the Latin and Cyrillic scripts.Apart from its use in writing the Greek language, in both its ancient and its modern forms, the Greek alphabet today also serves as a source of technical symbols and labels in many domains of mathematics, science and other fields.
+
+In its classical and modern forms, the alphabet has 24 letters, ordered from alpha to omega. Like Latin and Cyrillic, Greek originally had only a single form of each letter; it developed the letter case distinction between upper-case and lower-case forms in parallel with Latin during the modern era.
 \end{englishabstract}
 
 \tableofcontents
@@ -64,15 +72,80 @@ d&D在古时是描摹拱门或门的形状而成的象形符号，在古代腓�
 
 \begin{Main} % 开始正文
 
-\chapter{绪论(前言)}
-\section{研究的主要内容}
-\subsection{...}
-\subsubsection{...}
-\section{需要解决的问题}
-使得论文符合要求\cite{Yao:2015ix}\cite{seucover}。
+\chapter{前言}
+\section{数学公式}
+\subsection{简单的数学公式}
+\textbf{卷积}（\textbf{convolution}）在图像分析的线性方法中是一种重要的运算。卷积是一个积分，反映一个函数$f(t)$在另一个函数上$h(t)$移动时所重叠的量。函数$f$和$h$在有限域$[0,t]$上的$1D$卷积$f*h$由下式给出：
+ $$(f*h)(t) \equiv \int_0^t {f(\tau )h(t - \tau )d\tau } $$
 
-\chapter{...}
-...
+\subsection{带自动编号的公式}
+这里可以限定在$[0,t]$区间，原因是我们假设负坐标部分的值是0。为了准确起见，我们还可以将卷积积分的上限扩展为$( - \infty ,\infty )$：
+\begin{equation}(f*h)(t) \equiv \int_{ - \infty }^\infty  {f(\tau )h(t - \tau )d\tau }  = \int_{ - \infty }^\infty  {f(t - \tau )h(\tau )d\tau }
+  \end{equation} 
+
+\subsection{带等号对齐的公式}
+卷积可以推广到更高维。令$2D$函数$f$和$h$的卷积$g$记为$f*h$，则有：
+\begin{equation}
+\begin{aligned}
+(f*h)(x,y) &= \int_{ - \infty }^\infty  {\int_{ - \infty }^\infty  {f(a,b)h(x - a,y - b)} } dadb\\
+ &= \int_{ - \infty }^\infty  {\int_{ - \infty }^\infty  {f(x - a,y - b)h(a,b)} } dadb\\
+\end{aligned}
+\end{equation}
+
+\section{伪代码}
+在写论文的时候我们通常要写伪代码，伪代码里面有时甚至还要包含数学公式（如根号一类的）。伪代码会自动找一个比较好的位置插入图片。
+
+\begin{algorithm}
+    \caption{用归并排序求逆序数}
+    \begin{algorithmic}[1] %每行显示行号
+        \Require $Array$数组，$n$数组大小
+        \Ensure 逆序数
+        \Function {MergerSort}{$Array, left, right$}
+            \State $result \gets 0$
+            \If {$left < right$}
+                \State $middle \gets (left + right) / 2$
+                \State $result \gets result +$ \Call{MergerSort}{$Array, left, middle$}
+                \State $result \gets result +$ \Call{MergerSort}{$Array, middle, right$}
+                \State $result \gets result +$ \Call{Merger}{$Array,left,middle,right$}
+            \EndIf
+            \State \Return{$result$}
+        \EndFunction
+        \State
+        \Function{Merger}{$Array, left, middle, right$}
+            \State $i\gets left$
+            \State $j\gets middle$
+            \State $k\gets 0$
+            \State $result \gets 0$
+            \While{$i<middle$ \textbf{and} $j<right$}
+                \If{$Array[i]<Array[j]$}
+                    \State $B[k++]\gets Array[i++]$
+                \Else
+                    \State $B[k++] \gets Array[j++]$
+                    \State $result \gets result + (middle - i)$
+                \EndIf
+            \EndWhile
+            \While{$i<middle$}
+                \State $B[k++] \gets Array[i++]$
+            \EndWhile
+            \While{$j<right$}
+                \State $B[k++] \gets Array[j++]$
+            \EndWhile
+            \For{$i = 0 \to k-1$}
+                \State $Array[left + i] \gets B[i]$
+            \EndFor
+            \State \Return{$result$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\section{插入图片}
+在使用该命令的时候，图片会自动找一个他觉得比较好的位置插入图片，我们就不需要担心前面改了文字之后后面的格式乱掉。
+\begin{figure}[htbp!]
+\centering \includegraphics[width=0.9\textwidth]{img/test.jpg} \caption{图片的一个简单应用场景}
+\end{figure}
+
+\section{引用论文}
+使得论文符合要求\cite{Yao:2015ix}\cite{seucover}。
 
 \end{Main} % 结束正文
 
