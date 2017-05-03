@@ -45,10 +45,12 @@
 \ProcessOptions
 \LoadClass[a4paper,10.5pt,tablecaptionabove]{scrbook}
 \let\todayeng\today
+
+% my change
+\RequirePackage{lmodern}
 \RequirePackage{doc}
 \RequirePackage{keyval}
 \RequirePackage{ifthen}
-
 \RequirePackage{xltxtra}
 \RequirePackage{graphicx}
 \RequirePackage[dvipsnames]{xcolor}
@@ -68,6 +70,9 @@
 \setdefaultleftmargin{4ex}{}{}{}{}{}
 \RequirePackage[CJKnumber,slantfont,boldfont]{xeCJK}
 \RequirePackage{CJKulem}
+
+% my change
+\RequirePackage{fontspec}
 
 % my change
 %\def\CJK@spaceChar{\hskip \f@size \p@}
@@ -480,18 +485,24 @@
       \vspace*{60pt}
       \yihao\hei \bachelortitle \\
       \vspace*{60pt}
-      {\xiaoerhao\song \titlepre}
-      %{\erhao\song \parbox[t]{18em}{\fs\uline{\hfill\@title\hfill}}} \\
+      %{\xiaoerhao\song \titlepre}
+      % {\erhao\song \parbox[t]{18em}{\fs\uline{\hfill\@title\hfill}}} \\
+      
+      % my change
+      {\xiaoerhao\song\titlepre}
+      {\erhao\song \fs\underline{\parbox{16em}{\ \hfill\@title\hfill \ }}}\\
+      
+
       \vspace*{40pt}
       \renewcommand{\arraystretch}{1.5}
       \setlength{\tabcolsep}{0pt}
       \begin{tabular}{clcl}
         \sanhao\fs
-        \underline{\makebox[8em][s]{\makebox[8em][c]{\@department}}} &
+        \underline{\makebox[9.5em][s]{\makebox[9.5em][c]{\@department}}} &
         \sanhao
         \departmentpre &
         \sanhao\fs
-        \underline{\makebox[\@majorlen][s]{\makebox[\@majorlen][c]{\@major}}} &
+        \underline{\makebox[9.5em][s]{\makebox[9.5em][c]{\@major}}} &
         \sanhao \majorpre \\
       \end{tabular}
 
@@ -517,8 +528,8 @@
         \sanhao\addresspre\quad\underline{\makebox[20em][s]{
             \makebox[20em][c]{\fs{\@address}}}} \\
       \end{tabular}
-      \vfill
-      {\sanhao\today \par}
+      %\vfill
+      %{\sanhao\today \par}
     \end{center}
   \end{titlepage}
 }
