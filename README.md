@@ -1,7 +1,28 @@
 # seu-latex
 基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。
 
-修复因latex版本更迭而产生的部分bug，增加对mac os的支持以及内容更丰富的示例（注：目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同）。
+
+
+### 说明
+1. 本latex程序在Windows/Mac OS/Linux上均可以使用，并自备相应字体，不存在字体缺失问题。
+2. 目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同。
+3. [在线预览](https://github.com/a367/seu-latex/blob/master/main.pdf)
+
+### Latex发行版
+1. [Windows -- Texlive 2016](http://tug.org/texlive/files/texlive2016.iso.torrent)
+2. [Mac OS -- MacTex](https://tug.org/mactex/)
+3. 会用Linux写论文的人应该已经安装了latex
+
+### Latex工作环境
+1. [Windows + Latex + sublime text 3 + Sumatra PDF](http://www.360doc.com/content/14/0517/19/9206388_378573988.shtml)
+2. [Mac OS + Latex + sublime text 3 + Skim PDF](https://www.zhihu.com/question/23918126)
+3. 会用Linux写论文的人应该已经配好了工作环境
+
+## 版本历史
+
+### version 2.2.0 -- update 2017.05.03
+* 添加用latex实现的公式，图片，伪代码的相关代码
+* 添加毕业论文的pdf样式，便于在线观看
 
 ### version 2.1.1 -- update 2017.05.03
 * 修复seuthesis在Linux下缺失Times New Roman的问题
