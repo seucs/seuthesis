@@ -590,18 +590,21 @@ BoldItalicFont=timesbi.ttf
   \addcontentsline{toc}{chapter}{\@abstracttitletoc}
   \ifbachelordegree
   \renewcommand{\newtitleline}{\\}
-  \chapter*{\@title}
+  %\chapter*{\@title}
 
-  \begin{flushright}
-    \begin{tabular}[h]{ll}
-      \@studentid & \kai\@author \\
-      \advisorpre & \kai\@advisorname \\
-    \end{tabular}
-  \end{flushright}
+  %\begin{flushright}
+  %  \begin{tabular}[h]{ll}
+  %    \@studentid & \kai\@author \\
+  %    \advisorpre & \kai\@advisorname \\
+  %  \end{tabular}
+  %\end{flushright}
+  \vspace*{30pt}
 
   \begin{center}
-    \Large \hei\@abstracttitle
+    \huge \hei\@abstracttitle
   \end{center}
+  \vspace*{30pt}
+
   \par
   \else
   \chapter*{\@abstracttitle}
@@ -625,16 +628,12 @@ BoldItalicFont=timesbi.ttf
   \phantomsection
   \addcontentsline{toc}{chapter}{Abstract}
   \ifbachelordegree
-  \chapter*{\@titleeng}
-  \begin{flushright}
-    \begin{tabular}[h]{l}
-      \@studentid \qquad \@authoreng \\
-      \@advisornameeng \\
-    \end{tabular}
-  \end{flushright}
+
+  \vspace*{30pt}
   \begin{center}
-    {\Large Abstract}
+    {\huge Abstract}
   \end{center}
+  \vspace*{30pt}
   \par
   \else
   \chapter*{Abstract}
@@ -648,7 +647,7 @@ BoldItalicFont=timesbi.ttf
 }{
   \par
   \begin{description}
-  \item[Keywords:] \@keywords
+  \item[KEY WORDS:] \@keywords
   \end{description}
 }
 \let\tableofcontents@orig=\tableofcontents
