@@ -72,6 +72,9 @@
 \RequirePackage{CJKulem}
 
 % my change
+\RequirePackage{ulem}
+
+% my change
 %\def\CJK@spaceChar{\hskip \f@size \p@}
 \def\CJKindent{%
     %\settowidth\CJK@twochars{\CJK@spaceChar\CJK@spaceChar}
@@ -495,8 +498,8 @@ BoldItalicFont=timesbi.ttf
       
       % my change
       {\xiaoerhao\song\titlepre}
-      {\erhao\song \fs\underline{\parbox{16em}{\ \hfill\@title\hfill \ }}}\\
-      
+      {\erhao\song \parbox[t]{16em}{\fs\uline{\hfill\@title\hfill}}}\\
+    
 
       \vspace*{40pt}
       \renewcommand{\arraystretch}{1.5}
