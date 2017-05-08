@@ -146,6 +146,10 @@ BoldItalicFont=timesbi.ttf
 \titlespacing{\section}{0pt}{3.5ex plus .05ex minus .01ex}{2.9ex plus .04ex} % 标题间距
 \titlespacing{\subsection}{0pt}{3ex plus .05ex minus .01ex}{2ex plus .04ex}
 \titlespacing{\subsubsection}{0pt}{1.5ex plus .05ex minus .01ex}{1ex plus .01ex}
+
+%my change
+
+
 \newcommand{\linespacing}[1]{\linespread{#1}\selectfont}% 行距命令
 \newcommand{\stcleardp}{%
   \ifstoneside

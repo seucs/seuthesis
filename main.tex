@@ -13,6 +13,8 @@
 \renewcommand{\algorithmicensure}{\textbf{输出:}}
  % 这里是导言区
 
+ \titleformat{\subsection}{\centering\Huge\bfseries}{\thesubsection}{1em}{}
+
 \begin{document}
 \categorynumber{000} % 分类采用《中国图书资料分类法》
 \UDC{000}            %《国际十进分类法UDC》的类号
@@ -50,20 +52,19 @@ In its classical and modern forms, the alphabet has 24 letters, ordered from alp
 
 \begin{terminology}
 \begin{table}[h]
+\renewcommand\arraystretch{1.5}
 %\Large
-\begin{tabular}{|>{\LARGE}m{0.2\textwidth}<{\centering}|m{0.8\textwidth}|}
-\hline
-\normalsize \hspace*{\stretch{1}}符号\hspace*{\stretch{1}} &
-        \hspace*{\stretch{1}}含义\hspace*{\stretch{1}} \\ 
-\hline
+\begin{tabular}{>{\LARGE}m{0.2\textwidth} <{\centering}m{0.7\textwidth}}
+
+
 a & 如同汉字起源于象形，拉丁字母表中的每个字母一开始都是描摹某种动物或物体形状的图画\\
-\hline
+
 b&和A一样，字母B也可以追溯到古代腓尼基。在腓尼基字母表中B叫beth,代表房屋，在希伯来语中B也叫beth，也含房屋之意。\\
-\hline
+
 c& 字母C在腓尼基人的文字中叫gimel，代表骆驼。它在字母表中的排列顺序和希腊字母Γ(gamma)相同，实际上其字形是从后者演变而来的。C在罗马数字中表示100。\\
-\hline
+
 d&D在古时是描摹拱门或门的形状而成的象形符号，在古代腓尼基语和希伯来语中叫做daleth，是“门”的意思，相当于希腊字母Δ（delta）。\\
-\hline
+
 \end{tabular}
 %\caption{my table}
 \end{table}
