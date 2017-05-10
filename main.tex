@@ -7,6 +7,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
+\usepackage{subfigure}
 
 \floatname{algorithm}{算法}
 \renewcommand{\algorithmicrequire}{\textbf{输入:}}
@@ -141,6 +142,17 @@ d&D在古时是描摹拱门或门的形状而成的象形符号，在古代腓�
 在使用该命令的时候，图片会自动找一个他觉得比较好的位置插入图片，我们就不需要担心前面改了文字之后后面的格式乱掉。
 \begin{figure}[htbp!]
 \centering \includegraphics[width=0.9\textwidth]{img/test.jpg} \caption{图片的一个简单应用场景}
+\end{figure}
+
+\begin{figure}
+\centering
+\subfigure[the first subfigure]{
+\includegraphics[width=0.4\textwidth]{img/test.jpg} 
+}
+\subfigure[the second subfigure]{
+\includegraphics[width=0.4\textwidth]{img/test.jpg} 
+}
+\caption{子图应用场景}
 \end{figure}
 
 \section{引用论文}
