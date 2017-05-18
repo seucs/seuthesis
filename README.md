@@ -1,4 +1,4 @@
-# seu-latex
+# seuthesis-2
 基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。
 
 
