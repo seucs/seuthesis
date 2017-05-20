@@ -498,7 +498,7 @@ BoldItalicFont=timesbi.ttf
       
       % my change
       {\xiaoerhao\song\titlepre}
-      {\erhao\song \parbox[t]{16em}{\fs\uline{\hfill\@title\hfill}}}\\
+      {\erhao\song \parbox[t]{16em}{\fs\uline{\hfill \@title \hfill}}}\\
     
 
       \vspace*{40pt}
@@ -692,7 +692,11 @@ BoldItalicFont=timesbi.ttf
 \let\originalcite=\cite
 \renewcommand{\cite}[1]{\textsuperscript{\originalcite{#1}}}
 \renewcommand{\citet}[1]{\originalcite{#1}}
-\bibliographystyle{seuthesis}
+
+% my change
+\newif\ifthu@bachelor
+\def\thudot{\ifthu@bachelor\else\unskip.\fi}
+\bibliographystyle{thuthesis}
 % my change
 %\renewcommand\@biblabel[1]{#1}  % Reference list option change from [1] to 1
 \let\orig@bibliography=\bibliography
