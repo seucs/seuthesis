@@ -1,7 +1,5 @@
 # seuthesis-2
-基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。
-
-
+基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。并使用[thuthesis](https://github.com/xueruini/thuthesis)的参考文献引用样式。
 
 ### 说明
 1. 本latex程序在Windows/Mac OS/Linux上均可以使用，并自备相应字体，不存在字体缺失问题。
