@@ -76,7 +76,7 @@
 \RequirePackage{ulem}
 
 % 加粗改黑体
-\renewcommand{\textbf}[1]{{\bf{#1}}}
+\renewcommand{\textbf}[1]{{\normalfont\bfseries #1}}
 % my change
 %\def\CJK@spaceChar{\hskip \f@size \p@}
 \def\CJKindent{%
