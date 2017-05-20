@@ -706,7 +706,7 @@ BoldItalicFont=timesbi.ttf
   \phantomsection
   \addcontentsline{toc}{chapter}{\@acknowledgementtitletoc}
   \chapter*{#1}
-  \song\wuhao
+  \song\xiaosihao %my change
 }{\par}
 \newenvironment{Appendix}
 {%
