@@ -1,14 +1,14 @@
 # seuthesis-2
 
 ### 下载地址
-[点此下载](https://github.com/a367/seuthesis-2/releases/latest)
+[点此下载](https://github.com/a367/seuthesis-2/releases/latest)  [在线预览](https://github.com/a367/seu-latex/blob/master/main.pdf)
 
-基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。并使用[thuthesis](https://github.com/xueruini/thuthesis)的参考文献引用样式。
+
 
 ### 说明
-1. 本latex程序在Windows/Mac OS/Linux上均可以使用，并自备相应字体，不存在字体缺失问题。
-2. 目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同。
-3. [在线预览](https://github.com/a367/seu-latex/blob/master/main.pdf)
+* 基于[xuyuan](https://github.com/xuyuan)的[seuthesis](https://github.com/xuyuan/seuthesis)的latex模版进行改进。并使用[thuthesis](https://github.com/xueruini/thuthesis)的参考文献引用样式。
+* 本latex程序在Windows/Mac OS/Linux上均可以使用，并自备相应字体，不存在字体缺失问题。
+* 目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同。
 
 ### Latex发行版
 1. [Windows -- Texlive 2016](http://tug.org/texlive/files/texlive2016.iso.torrent)
