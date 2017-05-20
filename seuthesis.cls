@@ -43,7 +43,8 @@
 }
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{scrbook}}
 \ProcessOptions
-\LoadClass[a4paper,captions=tableheading]{scrbook}
+%\LoadClass[a4paper,captions=tableheading]{scrbook}
+\LoadClass[a4paper,10.5pt,tablecaptionabove]{scrbook}
 \let\todayeng\today
 
 % my change
@@ -74,6 +75,8 @@
 % my change
 \RequirePackage{ulem}
 
+% 加粗改黑体
+\renewcommand{\textbf}[1]{{\bf{#1}}}
 % my change
 %\def\CJK@spaceChar{\hskip \f@size \p@}
 \def\CJKindent{%
@@ -109,7 +112,15 @@
 \RequirePackage{titletoc} % 设置目录
 \hypersetup{bookmarksnumbered=true}%书签中章节编号
 \defaultfontfeatures{Mapping=tex-text} % --- as em-dash
-\setCJKmainfont[Path = ./font/]{simsun.ttf}
+
+
+% 修改中文字体族，增加黑体
+\setCJKmainfont[
+Path = ./font/,
+BoldFont=simhei.ttf,
+ItalicFont=simkai.ttf,
+BoldItalicFont=simfang.ttf
+]{simsun.ttf}
 \setCJKfamilyfont{zhsong}[Path = ./font/]{simsun.ttf}
 \newcommand{\song}{\CJKfamily{zhsong}}
 \setCJKfamilyfont{zhhei}[Path = ./font/]{simhei.ttf}
@@ -619,10 +630,8 @@ BoldItalicFont=timesbi.ttf
   \wuhao
   \fi
 }{
-  \par
-  \begin{description}
-  \item[关键词：] \@keywords
-  \end{description}
+  \\[1\baselineskip]
+  \textbf{关键词：} \@keywords
 }
 \newenvironment{englishabstract}[1]
 {
@@ -648,10 +657,8 @@ BoldItalicFont=timesbi.ttf
   \wuhao
   \fi
 }{
-  \par
-  \begin{description}
-  \item[KEY WORDS:] \@keywords
-  \end{description}
+  \\[1\baselineskip]
+  \textbf{KEY WORDS:} \@keywords
 }
 \let\tableofcontents@orig=\tableofcontents
 \renewcommand{\tableofcontents}
