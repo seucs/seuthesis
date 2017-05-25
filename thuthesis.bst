@@ -801,11 +801,18 @@ FUNCTION {book}
   fin.entry
 }
 
+FUNCTION {articlethesis.type}
+{ lang empty$
+    { "[J]" }
+    { "\thumasterbib" }
+  if$
+}
+
 FUNCTION {article}
 { output.bibitem
   format.authors "author" output.check
   new.block
-  format.title "title" output.check
+  format.title remove.dots articlethesis.type * output
   new.block
   crossref missing$
     { %journal emphasize "journal" output.check
