@@ -315,6 +315,8 @@ BoldItalicFont=timesbi.ttf
   }
 
   \ifbachelordegree
+  \newpage~\newpage~
+  \seudeclare
   \frontmatter
   \else
   \ifdoublecover
