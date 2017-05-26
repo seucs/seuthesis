@@ -126,6 +126,21 @@ BoldItalicFont=timesbi.ttf
 \newcommand{\qihao}{\fontsize{5.5pt}{6.5pt}\selectfont}
 
 
+  \renewcommand\frontmatter{%
+  \ifstoneside\clearpage\else\cleardoublepage\fi
+
+  \@mainmatterfalse
+  \pagenumbering{Roman}
+  \pagestyle{empty}}
+\renewcommand\mainmatter{%
+  \ifstoneside\clearpage\else\cleardoublepage\fi
+  \@mainmattertrue
+  \pagenumbering{arabic}
+  \pagestyle{plain}}
+\renewcommand\backmatter{%
+  \ifstoneside\clearpage\else\cleardoublepage\fi
+  \@mainmattertrue}
+
 % my change
 \DeclareCaptionFont{capFont}{\song\wuhao} % 表格名及图名用5号宋体
 \DeclareCaptionLabelSeparator{twospace}{~~}
@@ -315,7 +330,6 @@ BoldItalicFont=timesbi.ttf
   }
 
   \ifbachelordegree
-  \newpage~\newpage~
   \seudeclare
   \frontmatter
   \else
@@ -694,6 +708,7 @@ BoldItalicFont=timesbi.ttf
   \pagestyle{seunolabelstyle}
   \tableofcontents@orig \par
   \clearpage} %目录部分字体可采用小四号宋体。
+
   \renewpagestyle{plain}{\pagestyle{seustyle}}
 }
 \newenvironment{terminology}[1][\@terminologytitle]
@@ -708,7 +723,6 @@ BoldItalicFont=timesbi.ttf
 }
 \newenvironment{Main}
 {
-  \pagestyle{seustyle}
   \mainmatter % 开始正文部分
   \song\xiaosihao % 小四号宋体
 }{
