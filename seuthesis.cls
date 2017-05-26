@@ -85,34 +85,6 @@
     \setlength{\parindent}{2em}
     }
 
-% my change
-\DeclareCaptionFont{capFont}{\song\wuhao} % 表格名及图名用5号宋体
-\DeclareCaptionLabelSeparator{twospace}{~~}
-\captionsetup{
-  labelsep=twospace,% 去掉图标签后的冒号
-  font={capFont},%
-  figurename=图,%
-  tablename=表,%
-  listfigurename=插图目录,%
-  listtablename=表格目录}
-
-\RequirePackage{hyperref}
-\AtBeginDocument{\CJKindent{}%
-    \InputIfFileExists{seuthesis-utf8.cfg}% 引入配置文件
-    {\typeout{[seuthesis]: Load seuthesis-utf8.cfg successfully!}}%
-    {\typeout{[seuthesis]: Load seuthesis-utf8.cfg failed!}}%
-    \makeindex%
-    \wuhao%
-    \linespacing{\mainlineskip}
-  }
-\AtEndDocument{\backcover}
-
-\RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
-\RequirePackage[pagestyles, rm]{titlesec}
-\RequirePackage{titletoc} % 设置目录
-\hypersetup{bookmarksnumbered=true}%书签中章节编号
-\defaultfontfeatures{Mapping=tex-text} % --- as em-dash
-
 
 % 修改中文字体族，增加黑体
 \setCJKmainfont[
@@ -152,6 +124,39 @@ BoldItalicFont=timesbi.ttf
 \newcommand{\liuhao}{\fontsize{7.5pt}{9pt}\selectfont}
 \newcommand{\xiaoliuhao}{\fontsize{6.5pt}{7.5pt}\selectfont}
 \newcommand{\qihao}{\fontsize{5.5pt}{6.5pt}\selectfont}
+
+
+% my change
+\DeclareCaptionFont{capFont}{\song\wuhao} % 表格名及图名用5号宋体
+\DeclareCaptionLabelSeparator{twospace}{~~}
+\captionsetup{
+  labelsep=twospace,% 去掉图标签后的冒号
+  font={capFont},%
+  figurename=图,%
+  tablename=表,%
+  listfigurename=插图目录,%
+  listtablename=表格目录}
+
+\RequirePackage{hyperref}
+\AtBeginDocument{\CJKindent{}%
+    \InputIfFileExists{seuthesis-utf8.cfg}% 引入配置文件
+    {\typeout{[seuthesis]: Load seuthesis-utf8.cfg successfully!}}%
+    {\typeout{[seuthesis]: Load seuthesis-utf8.cfg failed!}}%
+    \makeindex%
+    \wuhao%
+    \linespacing{\mainlineskip}
+  }
+\AtEndDocument{\backcover}
+
+\RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\RequirePackage[pagestyles, rm]{titlesec}
+\RequirePackage{titletoc} % 设置目录
+\hypersetup{bookmarksnumbered=true}%书签中章节编号
+\defaultfontfeatures{Mapping=tex-text} % --- as em-dash
+
+
+
+
 \setlength{\parskip}{0pt}% 段距
 \newcommand{\mainlineskip}{1.3}% 主行距1.3
 \titlespacing{\section}{0pt}{3.5ex plus .05ex minus .01ex}{2.9ex plus .04ex} % 标题间距
@@ -543,7 +548,7 @@ BoldItalicFont=timesbi.ttf
             \makebox[20em][c]{\fs{\@coadvisorname}}}}\\%
         \fi
         \sanhao\durationpre\quad\underline{\makebox[20em][s]{
-            \makebox[20em]{\textsf{\@duration}}}} \\
+            \makebox[20em][c]{\fs{\@duration}}}}\\%
         \sanhao\addresspre\quad\underline{\makebox[20em][s]{
             \makebox[20em][c]{\fs{\@address}}}} \\
       \end{tabular}
@@ -606,18 +611,23 @@ BoldItalicFont=timesbi.ttf
   \renewcommand{\newtitleline}{\\}
   %\chapter*{\@title}
 
-  %\begin{flushright}
-  %  \begin{tabular}[h]{ll}
-  %    \@studentid & \kai\@author \\
-  %    \advisorpre & \kai\@advisorname \\
-  %  \end{tabular}
-  %\end{flushright}
-  \vspace*{30pt}
+  \vspace*{10pt}
+  \begin{center}
+    \xiaoerhao \hei\@title
+  \end{center}
+
+  \begin{flushright}
+    \begin{tabular}[h]{ll}
+      \@studentid & \kai\@author \\
+      \advisorpre & \kai\@advisorname \\
+    \end{tabular}
+  \end{flushright}
+  %\vspace*{30pt}
 
   \begin{center}
-    \huge \hei\@abstracttitle
+    \xiaoerhao \hei\@abstracttitle
   \end{center}
-  \vspace*{30pt}
+  %\vspace*{30pt}
 
   \par
   \else
@@ -641,11 +651,21 @@ BoldItalicFont=timesbi.ttf
   \addcontentsline{toc}{chapter}{Abstract}
   \ifbachelordegree
 
-  \vspace*{30pt}
+  \vspace*{10pt}
   \begin{center}
-    {\huge Abstract}
+    \xiaoerhao \textbf{\@titleeng}
   \end{center}
-  \vspace*{30pt}
+
+  \begin{flushright}
+    \begin{tabular}[h]{ll}
+      \@studentid & \@authoreng \\
+      Advisor & \@advisornameeng \\
+    \end{tabular}
+  \end{flushright}
+
+  \begin{center}
+    {\xiaoerhao \textbf{Abstract}}
+  \end{center}
   \par
   \else
   \chapter*{Abstract}
@@ -660,6 +680,8 @@ BoldItalicFont=timesbi.ttf
   \\[1\baselineskip]
   \textbf{KEY WORDS:} \@keywords
 }
+
+
 \let\tableofcontents@orig=\tableofcontents
 \renewcommand{\tableofcontents}
 {
