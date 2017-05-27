@@ -330,6 +330,7 @@ BoldItalicFont=timesbi.ttf
   }
 
   \ifbachelordegree
+  \ifstoneside\clearpage\else\cleardoublepage\fi
   \seudeclare
   \frontmatter
   \else
