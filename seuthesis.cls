@@ -349,7 +349,8 @@ BoldItalicFont=timesbi.ttf
   \textsc{Thesis}
 }
 \let\orig@emph=\emph
-\renewcommand{\emph}[1]{{\orig@emph{\kai#1}}}
+\renewcommand{\emph}[1]{{\normalfont\slshape #1}}
+
 \newcommand{\CoverTopOption}[3][s]{
   \makebox[1.5cm][#1]{\xiaowuhao #2}:{
     \underline{\makebox[1.5cm][c]{\xiaowuhao #3}}}
