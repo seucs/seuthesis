@@ -1,4 +1,4 @@
-# seuthesis-2
+# seuthesis
 
 ### 下载地址
 [点此下载](https://github.com/a367/seuthesis-2/releases/latest)  [在线预览](https://github.com/a367/seu-latex/blob/master/main.pdf)
