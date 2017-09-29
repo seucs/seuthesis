@@ -6,7 +6,7 @@
 
 
 ### 说明
-* 基于[xuyuan的seuthesis](https://github.com/xuyuan/seuthesis)的LaTeX模版进行改进，并使用其中的参考文献引用样式。
+* 基于[xuyuan的seuthesis](https://github.com/xuyuan/seuthesis)的LaTeX模版进行改进，并使用[thuthesis](https://github.com/xueruini/thuthesis)的参考文献引用样式。
 * 本LaTeX模版在Windows/Mac OS/Linux上均可以使用，并自备相应字体，不存在字体缺失问题。
 * 目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同。
 
