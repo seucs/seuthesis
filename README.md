@@ -13,7 +13,7 @@
 ### LaTeX发行版
 1. [Windows -- Texlive 2016](http://tug.org/texlive/files/texlive2016.iso.torrent)
 2. [Mac OS -- MacTex](https://tug.org/mactex/)
-3. 会用Linux写论文的人应该已经安装了latex
+3. 会用Linux写论文的人应该已经安装了LaTeX
 
 ### LaTeX工作环境
 1. [Windows + LaTeX + sublime text 3 + Sumatra PDF](http://www.360doc.com/content/14/0517/19/9206388_378573988.shtml)
