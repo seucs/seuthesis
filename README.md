@@ -12,8 +12,8 @@
 * 目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同。
 
 ### LaTeX 发行版
-1. [Windows -- Texlive 2016](http://tug.org/texlive/files/texlive2016.iso.torrent)
-2. [Mac OS -- MacTex](https://tug.org/mactex/)
+1. [Windows - Texlive 2016](http://tug.org/texlive/files/texlive2016.iso.torrent)
+2. [Mac OS - MacTex](https://tug.org/mactex/)
 3. 会用 Linux 写论文的人应该已经安装了 LaTeX
 
 ### 配置 LaTeX 工作环境
