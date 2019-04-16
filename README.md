@@ -1,8 +1,8 @@
 # seuthesis
 
 ### 下载地址
-* [点此下载](https://github.com/a367/seuthesis-2/releases/latest)
-* [在线预览](https://github.com/a367/seu-latex/blob/master/main.pdf)
+* [点此下载](https://github.com/SimonZYC/seuthesis/releases)
+* [在线预览](https://github.com/SimonZYC/seuthesis/blob/master/main.pdf)
 
 
 
@@ -25,5 +25,9 @@
 ```bash
 cd <project-path>
 make
+# Compile
+
+make clean
+# delete intermediate files
 ```
 
