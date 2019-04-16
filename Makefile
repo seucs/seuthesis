@@ -52,7 +52,7 @@ all: $(DOCUMENT).pdf
 
 clean:
 	rm -rf $(DOCUMENT).aux $(DOCUMENT).log $(DOCUMENT).toc \
-	$(DOCUMENT).bbl $(DOCUMENT).blg $(DOCUMENT).pdf \
+	$(DOCUMENT).bbl $(DOCUMENT).blg \
 	$(DOCUMENT).ps $(DOCUMENT).dvi $(DOCUMENT).synctex.gz \
 	$(DOCUMENT).ind $(DOCUMENT).inx $(DOCUMENT).gls \
 	$(DOCUMENT).glo $(DOCUMENT).bak $(DOCUMENT).brf \
