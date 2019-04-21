@@ -29,5 +29,8 @@ make
 
 make clean
 # delete intermediate files
+
+make wordcount
+# count words in main.tex
 ```
 

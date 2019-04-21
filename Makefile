@@ -1,60 +1,45 @@
-# Makefile for LaTeX document files
-# Created by Baochun Li, bli@eecg.toronto.edu, March 30 2001
-# Modified by Zimu Liu, zimu@eecg.toronto.edu, December 8, 2009
-# Last modified: December 8, 2009
+THESIS = main
+# TEX, BIB, TEST dir
+TEX_DIR = tex
+BIB_DIR = bib
 
-# Produce PS/PDF/DVI files: make
-# Clean all output files: make clean
+# Option for latexmk
+LATEXMK_OPT_BASE = -xelatex -gg -silent
+LATEXMK_OPT = $(LATEXMK_OPT_BASE) -f
+LATEXMK_OPT_PVC = $(LATEXMK_OPT_BASE) -pvc
 
-# Use pdflatex or latex
-# ENGINE=pdflatex
-ENGINE=xelatex
+all: $(THESIS).pdf
 
-# Name of the master LaTeX file
-DOCUMENT=main
+.PHONY : all clean pvc view wordcount git zip
 
-#--------------------------------------------------
-# Do NOT change anything below
-#--------------------------------------------------
+$(THESIS).pdf : $(THESIS).tex $(TEX_DIR)/*.tex *.bib seuthesis.cls seuthesis-utf8.cfg Makefile
+	-latexmk $(LATEXMK_OPT) $(THESIS)
 
-default: $(DOCUMENT).pdf
-pdf: $(DOCUMENT).pdf
+pvc :
+	latexmk $(LATEXMK_OPT_PVC) $(THESIS)
 
-$(DOCUMENT).toc: $(DOCUMENT).tex
-	$(ENGINE) $(DOCUMENT).tex
+validate :
+	xelatex -no-pdf -halt-on-error $(THESIS)
+	biber --debug $(THESIS)
 
-# ifeq ($(ENGINE), pdflatex)
-ifeq ($(ENGINE), xelatex)
-#--------------------------------------------------
-# pdflatex
-#--------------------------------------------------
-$(DOCUMENT).pdf: $(DOCUMENT).toc
-	bibtex $(DOCUMENT)
-	$(ENGINE) $(DOCUMENT).tex
-	$(ENGINE) $(DOCUMENT).tex
-else
-#--------------------------------------------------
-# latex
-#--------------------------------------------------
-$(DOCUMENT).dvi: $(DOCUMENT).toc
-	bibtex $(DOCUMENT)
-	$(ENGINE) $(DOCUMENT).tex
-	$(ENGINE) $(DOCUMENT).tex
+view : $(THESIS).pdf
+	open $<
 
-$(DOCUMENT).ps: $(DOCUMENT).dvi
-	dvips -t letter -Ppdf -G0 -o $@ $<
+wordcount:
+	@perl texcount.pl $(THESIS).tex -inc          | awk '/total/ {getline; print "词数    :",$$4}' 
+	@perl texcount.pl $(THESIS).tex -inc -char    | awk '/total/ {getline; print "字符数  :",$$4}' 
+	@perl texcount.pl $(THESIS).tex -inc -ch-only | awk '/total/ {getline; print "中文字数:",$$4}' 
 
-$(DOCUMENT).pdf: $(DOCUMENT).ps
-	cat $(DOCUMENT).ps | ps2pdf - > $(DOCUMENT).pdf 
-endif
+clean :
+	latexmk -C
+	-@rm -f *.xdv *.bbl *.fls $(TEX_DIR)/*.xdv $(TEX_DIR)/*.aux $(TEX_DIR)/*.log $(TEX_DIR)/*.fls _tmp_.pdf *.xml 2> /dev/null || true
 
-all: $(DOCUMENT).pdf
+s3 : $(THESIS).pdf
+	s3cmd put $< s3://sjtuthesis/README_0.7.pdf
 
-clean:
-	rm -rf $(DOCUMENT).aux $(DOCUMENT).log $(DOCUMENT).toc \
-	$(DOCUMENT).bbl $(DOCUMENT).blg \
-	$(DOCUMENT).ps $(DOCUMENT).dvi $(DOCUMENT).synctex.gz \
-	$(DOCUMENT).ind $(DOCUMENT).inx $(DOCUMENT).gls \
-	$(DOCUMENT).glo $(DOCUMENT).bak $(DOCUMENT).brf \
-	$(DOCUMENT).idx $(DOCUMENT).ilg $(DOCUMENT).out \
-	
+git :
+	for b in "0.7.x" "0.8.x" "develop" "develop-0.7" "develop-0.8"; do git co $${b}; git push --tags -f -u gitlab $${b}; git push --tags -f -u github $${b}; git push -f -u gitcafe $${b}; done
+	git co master; git push gitlab master; git push github master; git push gitcafe master
+
+zip :
+	git archive --format zip --output thesis.zip master
