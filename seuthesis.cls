@@ -203,8 +203,8 @@ BoldItalicFont=timesbi.ttf
   urlcolor=magenta
 }
 \newpagestyle{seustyle}{
-  \sethead[][{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}][\song{}\xiaowuhao{}第\thepage 页] % 偶数页
-  {}{{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}}{\song{}\xiaowuhao{}第\thepage 页} % 奇数页
+  \sethead[][{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}][\song{}\xiaowuhao{}第\thepage 页] % 偶数页
+  {}{{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}}{\song{}\xiaowuhao{}第\thepage 页} % 奇数页
   \setfoot{}{}{}
   \headrule
 }
@@ -212,8 +212,8 @@ BoldItalicFont=timesbi.ttf
   \pagestyle{seunolabelstyle}
 }
 \newpagestyle{seunolabelstyle}{
-  \sethead[][{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}][]
-  {}{{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}}{}
+  \sethead[][{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}][]
+  {}{{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}}{}
   \setfoot{}{}{}
   \headrule
 }
@@ -532,7 +532,7 @@ BoldItalicFont=timesbi.ttf
       
       % my change
       {\xiaoerhao\song\titlepre}
-      {\erhao\song \parbox[t]{16em}{\fs\uline{\hfill \@title \hfill}}}\\
+      {\erhao\song \parbox[t]{19em}{\fs\uline{\hfill \@title \hfill}}}\\
     
 
       \vspace*{40pt}
