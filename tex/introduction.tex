@@ -4,6 +4,7 @@
 %%==================================================
 
 \chapter{前言}
+\label{chp:intro}
 
 本章是课题的前言部分。在此章中，首先介绍了课题的实际背景，接下来是课题的目的和意义，并且对当前的研究现状做了简要调研与分析，最后介绍了课题的主要研究内容。
 
@@ -54,8 +55,15 @@
 \vspace{-.1in}
 \end{figure}
 
-\par 这个问题由于网络负载不均而加重，这在生产环境的数据中心非常普遍~\cite{Kandula09a,Chowdhury13a,Greenberg09a,rashmi2016ec}，例如，在研究~\cite{rashmi2016ec}中，研究者测量了Facebook一个集群所有上行和下行链路中最大利用率和平均利用率的比值，结果表明这个比值在半数以上的时间里保持在4.5以上，这意味着严重的负载不均。
+\par 这个问题由于网络负载不均而加重，这在生产环境的数据中心非常普遍~\cite{Kandula09a,Chowdhury13a,Greenberg09a,rashmi2016ec}，例如，在研究~\cite{rashmi2016ec}中，研究者测量了Facebook一个集群所有上行和下行链路中最大利用率和平均利用率的比值，结果表明这个比值在半数以上的时间里保持在4.5以上，这意味着严重的负载不均。在SP-Cache~\cite{Yu:2018:SLR:3291656.3291658}的研究中，研究人员分别测量了在有无内存缓存的情况下，不同请求速率下的文件的平均读延迟，结果表明~\ref{fig:impact_of_imbalance}当集群负载不重时（每秒$5$个请求），内存缓存带来了显著性好处，降低平均读延迟达 $5\times$，然而，当负载骤然增大，集群中的热点机器变得突出，缓存带来的好处迅速减少，尤其当请求速率大于$9$，读延迟就由热点服务器的网络拥塞决定，内存缓存就变得\emph{无关紧要}。
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/introduction/latencies_under_imbalance}
+    \caption{有/无缓存的情况下平均读延迟随着负载增加而增加。}
+    \label{fig:impact_of_imbalance}
+    \vspace{-.15in}
+\end{figure}
 
 \section{研究现状}
 

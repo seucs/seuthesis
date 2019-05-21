@@ -2,17 +2,23 @@
 % !TEX encoding = UTF-8 Unicode
 % !Mode:: "TeX:UTF-8"
 \documentclass[bachelor,nocolorlinks, printoneside]{seuthesis} % 本科
+
 % \documentclass[master]{seuthesis} % 硕士
 % \documentclass[doctor]{seuthesis} % 博士
 % \documentclass[engineering]{seuthesis} % 工程硕士
 \usepackage{CJK,CJKnumb}
 \usepackage{amsmath}
+% \usepackage[table,xcdraw]{xcolor}
 \usepackage{amsfonts} 
 \usepackage{bm} 
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
-\usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{bigstrut}
+\usepackage{tabularx}
+\usepackage{bookmark}
+
 
 \floatname{algorithm}{算法}
 \renewcommand{\algorithmicrequire}{\textbf{输入:}}
@@ -50,6 +56,7 @@
 \begin{Main} % 开始正文
 
 \include{tex/introduction}
+\include{tex/motivation}
 
 \end{Main} % 结束正文
 
@@ -58,7 +65,12 @@
 % 参考文献
 \bibliography{seuthesis}
 
-
+\begin{Appendix}
+\chapter{1}
+hello1
+\chapter{2}
+hello2
+\end{Appendix}
 
 \newpage
 \printindex % 索引
