@@ -1,0 +1,68 @@
+\chapter{简单方案与缺点}
+
+\par 在本章中我们会讨论一个想法直接的简单的方案，此方案没有考虑工程实现的难度，仅考虑我们的目标。然后本章会讨论我们的现有条件，分析这个简单方案存在的缺点，不能在实际中应用的原因，为我们的实际方案提供参考。
+
+\section{简单方案}
+
+\par 由第~\ref{chp:motivation}章我们知道，设计方案需要考虑如何决定复制多少热门的列，以及列的“捆绑”（bundle）放置问题。那么，根据之前的分析，直观上来说，想要基于列的访问热度对集群缓存系统进行列级别的负载均衡，我们的系统需要获得SQL查询任务具体访问的列，才方便对列的热度进行统计，并且根据此热度信息对热门的列进行复制。应用访问数据表的列的信息是由上层计算框架（如Spark SQL）掌握，而alluxio是不知道的，需要计算框架提供给它，拿到这些信息之后，alluxio进行统计，计算列的访问热度，根据热度，计算列需要拷贝的副本数，访问到来时，alluxio根据一定的策略，返回副本中的一个（如果被复制）或者是原表。
+
+% \subsection{简单方案设计}
+
+\par 图~\ref{fig:sim-archi}所示即为本章描述的简单方案的架构的设计。该架构主要有三大组件，最上层计算框架为Spark SQL~\cite{spark-sql}（也可以更换为其他的），中间是基于alluxio\cite{alluxio}实现的列级别的负载均衡系统CW-Cache，底层是分布式文件系统HDFS（Hadoop File System）\cite{hdfs}。
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=0.4\textwidth]{img/simple-solution/sim-archi}
+	
+	\caption{简单方案的架构设计。}
+	\label{fig:sim-archi}
+	%\vspace{-.1in}
+\end{figure}
+
+\par 这个列级别的集群缓存系统负载均衡方案工作流程大致如下：当用户给Spark SQL提交一个查询任务，经过一系列转换后，Spark SQL得到具体要访问的列的信息，Reporter负责将这些信息传递给CW-Cache，CW-Cache记录下这些信息，并且将对应列的访问计数器加1。在经过一段时间后，CW-Cache对于缓存的数据表的各个列，均维持有计数器，从中获得各个列的热度（访问频率），然后它根据一定的算法计算出哪些列需要进行复制，复制多少份，哪些列需要“捆绑”在一起放置。当查询任务再此到来，CW-Cache得到应用访问的列，CW-Cache根据一定的策略，在缓存副本（如果有）或者原表中选择相应的列的信息返回给应用，尽可能使得负载比较分散，并且尽力避免出现shuffle，同时更新相关列的访问计数器。以上步骤重复进行。
+
+\par 这个系统是根据我们的目标的很直接简单的一种思路，但是它是不实用的，这样的设计不够通用，比如图~\ref{fig:sim-archi}是针对Spark SQL进行了修改的，如果更换SQL引擎又需要重新实现；其次，这样的设计需要对上层计算层和中间层同时做修改，增加了二者的耦合度，不利于软件开发与维护。下面我们会分析现有条件Parquet和alluxio来解释以上原因。
+
+\section{现有条件}
+
+\subsection{Parquet文件格式}
+
+\par 列式存储有多种格式，Parquet是其中一种被广泛使用的，我们的方案针对Parquet实现，所以这里具体讨论一下Parquet格式。
+
+\par Parquet文件是以二进制方式存储的，因此是不能够直接读取的，Parquet中包括该文件的元数据和数据，所以Parquet格式的文件是自解析的。在Hadoop File System文件系统和Parquet文件中有以下几个概念。
+
+\begin{itemize}
+    \item HDFS块(Block)：它是HDFS上的最小的副本单位，HDFS会把一个Block存储成本地的一个文件，并且维护分散在不同的机器上的多个副本，一般情况下一个Block的大小为256M、512M等。
+    \item HDFS文件(File)：一个HDFS的文件包括数据和元数据，数据分散地存储在多个Block中。
+    \item 行组(Row Group)：按照行将数据从物理上划分为多个单元，每一个行组包含一定的行数，在一个HDFS文件中至少存储一个行组，Parquet读写的时候会将整个行组缓存在内存中，所以每一个行组的大小是由内存大的小决定的，例如记录占用空间比较小的Schema可以在每一个行组中存储更多的行。
+    \item 列块(Column Chunk)：在一个行组中每一列保存在一个列块中，行组中的所有列连续的存储在这个行组文件中。一个列块中的值都是相同类型的，不同的列块可能使用不同的算法进行压缩。
+    \item 页(Page)：每一个列块划分为多个页，一个页是最小的编码的单位，在同一个列块的不同页可能使用不同的编码方式。
+\end{itemize}
+
+\par 一般情况下，在存储Parquet数据的时候会按照块（Block）大小设置行组的大小，由于一般情况下每一个Mapper任务处理数据的最小单位是一个Block，这样可以把每一个行组由一个Mapper任务处理，提高任务执行并行度。Parquet文件的格式如下图~\ref{fig:parquet-file-layout}所示。
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/simple-solution/FileLayout}
+	
+	\caption{Parquet文件格式。}
+	\label{fig:parquet-file-layout}
+	%\vspace{-.1in}
+\end{figure}
+
+\subsection{Alluxio}
+
+\par Alluxio原名Tachyon，是一个基于内存的分布式文件系统，它是架构在底层分布式文件系统（如Amazon S3、Apache HDFS等）和上层分布式计算框架之间的一个中间件（如Spark、MapReduce、Hbase、Flink等），主要职责是以文件形式在内存或其它存储设施中提供数据的存取服务。在Alluxio出现以前，这些上层的分布式框架，往往都是直接从底层的分布式文件系统中读写数据，效率比较低，性能消耗比较大，而将Alluxio部署在二者之间，以文件的形式在内存中对外提供读写访问服务的话，那么Alluxio可以为那些大数据应用提供一个数量级的加速，而且它只要提供通用的数据访问接口，就能很方便的切换底层分布式文件系统。
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/simple-solution/alluxio-archi}
+	
+	\caption{Alluxio架构。}
+	\label{fig:alluxio-archi}
+	%\vspace{-.1in}
+\end{figure}
+
+\par Alluxio的架构如图~\ref{fig:alluxio-archi}所示。整体框架为主从结构，与Hadoop\cite{hdfs}等类似。主节点为Master，负责管理全局的文件系统元数据，比如文件系统树等；从节点为Worker，负责管理本节点数据存储服务；Client用于Alluxio与用户应用的交互，为用户提供统一的文件存取服务接口。
+
+\par 应用程序访问Alluxio，先通过Client客户端与主节点Master通讯，获取对应文件的元数据，得到存储应用需要的文件的worker，再和对应Worker节点通讯，进行文件存取操作。所有的Worker会周期性地发送心跳给Master，维护文件系统元数据信息，确保自己被Master感知而仍然能在集群中正常提供服务。Master不会主动发起与其他组件的通信，它只是以回复请求的方式与其他组件进行通信。这与HDFS、HBase等分布式系统设计模式是一致的。
