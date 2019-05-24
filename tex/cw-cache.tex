@@ -1,4 +1,140 @@
 \chapter{CW-Cache：设计与分析}
 \label{chp:cw-cache}
 
-在本章我们会对我们的目标问题进行数学建模，
+\par 根据第~\ref{chp:simple-solution}章对简单方案的分析，我们了解到我们的方案需要根据数据表中各个列的热门度（访问频率）决定哪一些列需要被复制，复制多少份，此外根据第~\ref{chp:motivation}章的分析，复制后的列的副本分开存储，执行SQL查询任务时会引起shuffleing，且shuffling会对任务执行时间产生不可小觑的影响，我们设计的方案需要尽力避免。本人的毕业设计是实验室项目组的一部分，此项目还在进行中，在这个毕业设计中我会展示目前其中的一种设计方案，接下来我会对此方案进行数学建模与分析。
+
+\par 我们称这个方案为“Bundle-K”，正如字面意思所示，我们经过统计后将数据表中的各个列按照热度（访问频率）进行排序，然后“捆绑”前$K$个列进行复制。在执行查询任务的时候，如果查询任务涉及的所有列均在这复制出来的前$K$个列中，那么就由副本为查询任务提供数据，否则就由原表为任务提供数据。
+
+\section{问题建模}
+
+\par \textbf{符号定义} \quad 这里我们对一张数据表内的列级别的共同访问模式进行描述。假设这张表共有$n$列，记为 $\left\{c_{0}, c_{1}, \dots, c_{n-1}\right\}$ ，它们所占空间的归一化分别是 $\left\{s_{0}, s_{1}, \dots, s_{n-1}\right\}$ ，则 $\sum_{i=0}^{n-1} s_i = 1$ ，一些查询任务会访问一组特定的列，我们称这一组列是一个共同访问模式。假设有$m$个共同访问模式 $T = \left\{t_{0}, t_{1}, \dots, t_{m-1}\right\}$ ，对于某一个特定的访问模式$t_i$，它的热度$p_i$代表了有这个访问模式的查询任务的数量，$ts_i$是这个访问模式中所有列的大小之和。这$m$组共同访问模式的负载分别是 $\left\{l_{0}, l_{1}, \dots, l_{m-1}\right\}$ ，其中 $l_i = p_i ts_i$ 。
+
+\par 记$k$为复制的最热门的列的数量，$S_k$是这复制的$k$列组成的副本能够覆盖的访问模式的集合，那么所有的访问模式就被分成了两组，$S_k$和$T-S_k$。记$L_h$和$L_c$分别是$S_k$和$T-S_k$承担的总负载，则有 $L_h=\sum_{i \in S_{k}} l_{i}$ 以及 $ L_c = \sum_{i \notin S_{k}} l_{i}$。
+
+\par 假设我们的集群有$N$台服务器，我们的目标是找到$k$和副本的数量$r$来最小化任意一台服务器的\emph{负载的方差}和\emph{复制的代价}。
+
+
+\par \textbf{目标} \quad  记$X$是任意一台服务器的负载，那么
+
+\begin{equation}
+    X=a_{0} \frac{L_{h}}{r}+a_{1} L_c,
+\end{equation}
+
+\par 其中$a_0$ 和 $ a_1$ 是二元随机变量，表示一个副本/原表是否被放置在这台机器上。由于我们将副本和原表随机放置在集群中，$a_0$ 和 $ a_1$ 服从伯努利分布且相互独立，因此我们能够得出：
+
+\begin{equation}
+\begin{split}
+\operatorname{Var}(X)&=\frac{L_{h}^{2}}{r^{2}}\frac{r}{N}\left(1-\frac{r}{N}\right)+L_{c}^{2}\frac{1}{N}\left(1-\frac{1}{N}\right) \\
+& = \frac{1}{N}\left(\frac{L_{h}^{2}}{r}+L_{c}^{2}\right) - \frac{1}{N^2}\left( L_h^2 + L_c^2\right)
+\end{split}
+\end{equation}
+
+\par 记 $C$ 为复制的代价，即缓存这些副本占用的内存空间，我们有：
+
+\begin{equation}
+    C = r \sum_{i=0}^{k-1} s_i
+\end{equation}
+
+\par 我们的目标是使得负载的方差与复制的代价的加权和最小化。假设权重为 $w$，那么：
+
+\begin{equation}
+\label{eq:obj}
+\begin{aligned}
+\min \quad & \frac{1}{N}\left(\frac{L_{h}^{2}}{r}+L_{c}^{2}\right) - \frac{1}{N^2}\left( L_h^2 + L_c^2\right) + w\times r \sum_{i=0}^{k-1} s_i\\
+\textrm{s.t.} \quad & k \in \{1, \cdots, n\}\\
+& r \in \{1, \cdots, N\}    \\
+\end{aligned}
+\end{equation}
+
+\section{算法}
+
+\par 我们可以通过遍历所有可能的值，即从1到n，来寻找最佳的$k$。具体来说，对于每一个可能的$k$值，我们那更新$S_k$来计算$L_h$ 和 $L_c$，接着我们计算当前的$k$值下最优的$r$值。用$f(r)$并表示目标函数，我们能够发现：
+
+\begin{equation}
+f'(r) = - \frac{L_h^2}{Nr^2} + w\sum_{i=0}^{k-1} s_i
+\end{equation}
+\par 当 $f'(r) = 0$，可以得到：
+\begin{equation}
+\label{eq:r}
+r = \sqrt{\frac{L_h^2}{N w \sum_{i=0}^{k-1} s_i}},
+\end{equation}
+
+\par 在这个例子中，我们的目标函数$f(r)$能够求到最小值。
+
+\begin{algorithm}[tb]
+	\caption{Find optimal $k$ and $r$}
+	\label{alg:algo}
+	\small
+	\begin{algorithmic}[1]
+		\Statex{-- $T$: 所有的共同访问模式}
+		\Statex{-- $l[0\cdots m-1]$: $m$ 个访问模式的负载}
+		\Statex{-- $w$: 最小化目标函数（等式~\ref{eq:obj}）中的权重}
+		
+		\Function{UpdateSk}{$k, S_k, O_k$} \Comment{update $S_k$}
+		\ForAll{$t \in O_k$}
+		\If{$k$ hottest columns contain $t$}
+		\State{move $t$ from $O_k$ to $S_k$}
+		\EndIf
+		\EndFor
+		\EndFunction
+		
+		\Function{FindOpt}{}
+		\State{$S_k \gets \{\}$}\Comment{初始化 $S_k$}
+		\State{$O_k \gets T$}\Comment{初始化 $T - S_k$}
+		\State{$opt\_k \gets -1$}\Comment{初始化最优值 $k$}
+		\State{$opt\_r \gets -1$}\Comment{初始化最优值 $r$}
+		\State{$opt\_obj \gets + \infty$}\Comment{初始化最优目标}
+		\ForAll{$k \in \{1, \cdots, n\}$}
+		\State{$\Call{UpdateSk}{k, S_k, O_k}$}
+		\State{$L_h \gets \sum_{i \in S_{k}} l_{i}$}
+		\State{$L_c \gets \sum_{i \notin S_{k}} l_{i}$}
+		\State{$r \gets$ get integer r using equation \ref{eq:r}}
+		\State{$r \gets \min\{N, r\}$}\Comment{$r \leq N$}
+		\State{$obj \gets$ calculate objective in equation \ref{eq:obj}}
+		% \State{$l' \gets \Call{CalcLat}{1, k} + \Call{CalcLat}{k + 1, n}$}
+		\If{$obj < opt\_obj$}\Comment{更新 $k, r, obj$}
+		\State{$opt\_k \gets k$}
+		\State{$opt\_r \gets r$}
+		\State{$opt\_obj \gets obj$}
+		\EndIf
+		\EndFor
+		\State{\Return $opt\_k, opt\_r$}
+		% \State{$l' \gets \min_{k \in \{2, \cdots, n - 1\}} \Call{CalcLat}{1, k} + \Call{CalcLat}{k + 1, n}$}
+		% \If{$l - l' > w\beta$} \Comment{estimate regret}
+		% \State{\Return \texttt{true}}
+		% \Else
+		% \State{\Return \texttt{false}}
+		% \EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+
+\par 算法~\ref{alg:algo}展示了求解最优的$k$ 和 $r$的过程。时间复杂度为$O(n + m)$，其中$n$是列的数量而$m$是访问模式的数量。
+
+\par 算法~\ref{alg:algo}中 最耗时的步骤是对每一个$k$值更新$S_k$，把所有的访问模式$T$排个序是可选的降低开销的方法。具体来说，对于访问模式$t_i$，记$e_i$是其热门度最低的列，我们把$T$中的$m$个访问模式按照它们热门度最低的列的热门度进行排序$\left\{e_{0}, e_{1}, \dots, e_{m-1}\right\}$。这样，随着$k$的增加，排序后的$T$中的访问模式就会依次被覆盖。
+
+\par 算法~\ref{alg:update}展示了当$T$被排好序后，更新$S_k$的过程。基于排序后的$T$来搜索最佳的$k$ 和 $r$，时间复杂度是$O(n + m)$，假设此排序过程的时间复杂度是$O(m\log{m})$（例如快速排序），那么总的时间复杂度是$O(m\log{m} + n)$。
+
+\begin{algorithm}[tb]
+	\caption{Update $S_k$ for sorted $T$}
+	\label{alg:update}
+	\small
+	\begin{algorithmic}[1]
+		\Function{UpdateSk}{$k, S_k, O_k$}
+		\ForAll{$t \in O_k$}
+		\If{$k$ hottest columns contain $t$}
+		\State{move $t$ from $O_k$ to $S_k$}
+		\Else
+		\State{\Return}
+		\EndIf
+		\EndFor
+		\EndFunction
+		
+	\end{algorithmic}
+\end{algorithm}
+
+\section{通过列的热门度估算共同访问模式}
+数据Shuffling与数据放置的位置、网络通信状况、任务调度等因素均有关，非常复杂，它产生的影响难以进行确定性的数学建模进行研究
+\par 在本章我们会对我们的目标问题进行数学建模，
+
