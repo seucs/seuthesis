@@ -57,6 +57,7 @@
 \end{figure}
 
 \subsection{Alluxio}
+\label{subsec:alluxio}
 
 \par Alluxio原名Tachyon，是一个基于内存的分布式文件系统，它是架构在底层分布式文件系统（如Amazon S3、Apache HDFS等）和上层分布式计算框架之间的一个中间件（如Spark、MapReduce、Hbase、Flink等），主要职责是以文件形式在内存或其它存储设施中提供数据的存取服务。在Alluxio出现以前，这些上层的分布式框架，往往都是直接从底层的分布式文件系统中读写数据，效率比较低，性能消耗比较大，而将Alluxio部署在二者之间，以文件的形式在内存中对外提供读写访问服务的话，那么Alluxio可以为那些大数据应用提供一个数量级的加速，而且它只要提供通用的数据访问接口，就能很方便的切换底层分布式文件系统。
 
