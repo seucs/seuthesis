@@ -126,7 +126,7 @@
 
 \par 我们部署了一个含有1个master和2个worker的小集群，所用的实例是c5.4xlarge，每一个有32 GB内存和16个CPU核，通过iperf3测试，小集群的网络带宽是10 Gbps。我们在集群上部署了Alluxio以及Spark，运行TPC-H标准测试程序。在实验中，只有一台worker缓存有6 GB的Parquet格式的数据，因此集群里每次执行查询任务都会引发从有数据的机器到没有数据的机器的数据shuffling。我们关闭了Spark和Alluxio的数据被动缓存功能，一个一个按顺序执行标准测试程序里的查询任务，保证每一次执行都会有数据shuffling。我们会记录每一列的总shuffle量。
 
-\begin{figure}[]
+\begin{figure}[htbp]
 	\centering
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
@@ -134,7 +134,6 @@
 		\caption{每一列的总shuffle数据量。}
 		\label{fig:pop-shf-a}
 	\end{subfigure}%
-	
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
 		\includegraphics[width=1\textwidth]{img/motivation/pop-shf-b}
@@ -146,6 +145,8 @@
 	\label{fig:pop-shf}
 	%\vspace{-.1in}
 \end{figure}
+
+
 
 \subsection{每一列的数据shuffle}
 
