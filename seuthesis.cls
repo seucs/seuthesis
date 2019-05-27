@@ -44,7 +44,7 @@
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{scrbook}}
 \ProcessOptions
 %\LoadClass[a4paper,captions=tableheading]{scrbook}
-\LoadClass[a4paper,10.5pt,tablecaptionabove]{scrbook}
+\LoadClass[a4paper,10.5pt,tablecaptionabove,oneside]{scrbook}%在这加oneside就是单面，不加就是双面
 \let\todayeng\today
 
 % my change
@@ -75,6 +75,8 @@
 % my change
 \RequirePackage{ulem}
 
+%普通加粗
+\newcommand{\oldtextbf}[1]{{\bfseries #1}}
 % 加粗改黑体
 \renewcommand{\textbf}[1]{{\normalfont\bfseries #1}}
 % my change
@@ -101,6 +103,8 @@ BoldItalicFont=simfang.ttf
 \newcommand{\kai}{\CJKfamily{zhkai}}
 \setCJKfamilyfont{zhfs}[Path = ./font/]{simfang.ttf}
 \newcommand{\fs}{\CJKfamily{zhfs}}
+\setCJKfamilyfont{zhming}[Path = ./font/]{mingliu.ttf}
+\newcommand{\ming}{\CJKfamily{zhming}}
 
 % my change, 英文字体使用 Times New Roman
 \setmainfont[
@@ -163,7 +167,7 @@ BoldItalicFont=timesbi.ttf
   }
 \AtEndDocument{\backcover}
 
-\RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}%这里加bindingoffset=0.5cm就是打印版本
 \RequirePackage[pagestyles, rm]{titlesec}
 \RequirePackage{titletoc} % 设置目录
 \hypersetup{bookmarksnumbered=true}%书签中章节编号
@@ -173,13 +177,12 @@ BoldItalicFont=timesbi.ttf
 
 
 \setlength{\parskip}{0pt}% 段距
-\newcommand{\mainlineskip}{1.3}% 主行距1.3
+\newcommand{\mainlineskip}{1.571}% CHANGE 主行距1.385
 \titlespacing{\section}{0pt}{3.5ex plus .05ex minus .01ex}{2.9ex plus .04ex} % 标题间距
 \titlespacing{\subsection}{0pt}{3ex plus .05ex minus .01ex}{2ex plus .04ex}
 \titlespacing{\subsubsection}{0pt}{1.5ex plus .05ex minus .01ex}{1ex plus .01ex}
 
 %my change
-
 
 \newcommand{\linespacing}[1]{\linespread{#1}\selectfont}% 行距命令
 \newcommand{\stcleardp}{%
@@ -202,9 +205,10 @@ BoldItalicFont=timesbi.ttf
   menucolor=red,
   urlcolor=magenta
 }
+
 \newpagestyle{seustyle}{
-  \sethead[][{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}][\song{}\xiaowuhao{}第\thepage 页] % 偶数页
-  {}{{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}}{\song{}\xiaowuhao{}第\thepage 页} % 奇数页
+  \sethead[][{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}][\song{}\xiaowuhao{}第\thepage 页] % 偶数页
+  {}{{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}}{\song{}\xiaowuhao{}第\thepage 页} % 奇数页
   \setfoot{}{}{}
   \headrule
 }
@@ -212,8 +216,8 @@ BoldItalicFont=timesbi.ttf
   \pagestyle{seunolabelstyle}
 }
 \newpagestyle{seunolabelstyle}{
-  \sethead[][{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}][]
-  {}{{\song{}\xiaowuhao{}东南大学2015届本科生毕业设计（论文）}}{}
+  \sethead[][{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}][]
+  {}{{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}}{}
   \setfoot{}{}{}
   \headrule
 }
@@ -514,7 +518,7 @@ BoldItalicFont=timesbi.ttf
   \blfootnote{\wuhao\seuthesis@thanks}
   \fi
 
-  \stcleardp
+  \stcleardp\textbf
 }
 
 \ifbachelordegree % 本科论文封面
@@ -524,51 +528,51 @@ BoldItalicFont=timesbi.ttf
     \begin{center}
       \vspace*{20pt}
       \includegraphics[height=2cm]{figures/seu-text-logo} \\
-      \vspace*{60pt}
-      \yihao\hei \bachelortitle \\
-      \vspace*{60pt}
+      \vspace*{20pt}
+      \xiaochuhao\song\oldtextbf{毕业设计}(\oldtextbf{论文})\oldtextbf{报告} \\
+      \vspace*{40pt}
       %{\xiaoerhao\song \titlepre}
       % {\erhao\song \parbox[t]{18em}{\fs\uline{\hfill\@title\hfill}}} \\
       
       % my change
-      {\xiaoerhao\song\titlepre}
-      {\erhao\song \parbox[t]{19em}{\fs\uline{\hfill \@title \hfill}}}\\
+      {\sanhao\ming\titlepre}
+      {\sanhao \parbox[t]{20em}{\ming\uline{\hfill \@title \hfill}}}\\
     
 
       \vspace*{40pt}
       \renewcommand{\arraystretch}{1.5}
       \setlength{\tabcolsep}{0pt}
       \begin{tabular}{clcl}
-        \sanhao\fs
-        \underline{\makebox[9.5em][s]{\makebox[9.5em][c]{\@department}}} &
         \sanhao
+        \underline{\makebox[9.5em][s]{\makebox[9.5em][c]{\ming\@department}}} &
+        \sanhao\ming
         \departmentpre &
-        \sanhao\fs
-        \underline{\makebox[9.5em][s]{\makebox[9.5em][c]{\@major}}} &
-        \sanhao \majorpre \\
+        \sanhao
+        \underline{\makebox[9.5em][s]{\makebox[9.5em][c]{\ming\@major}}} &
+        \sanhao\ming \majorpre \\
       \end{tabular}
 
-      \vspace*{70pt}
+      \vspace*{20pt}
 
       \renewcommand{\arraystretch}{1.1}
       \setlength{\tabcolsep}{0pt}
       \begin{tabular}{c}
-        \sanhao\studentidpre\quad\underline{%
+        \sanhao\ming\studentidpre\underline{%
           \makebox[20em][s]{\makebox[20em][c]{%
-              \textsf{\@studentid}}}} \\
-        \sanhao\studentnamepre\quad\underline{\makebox[20em][s]{%
-            \makebox[20em][c]{\fs{\@author}}}} \\
-        \sanhao\advisorpre\quad\underline{\makebox[20em][s]{%
-            \makebox[20em][c]{\fs{\@advisorname}}}}%
+              \ming{\@studentid}}}} \\%\testsf
+        \sanhao\ming\studentnamepre\underline{\makebox[20em][s]{%
+            \makebox[20em][c]{\ming{\@author}}}} \\
+        \sanhao\advisorpre\underline{\makebox[20em][s]{%
+            \makebox[20em][c]{\ming{\@advisorname}}}}%
         \\
-        \ifbcoadvisor
-        \sanhao\coadvisorpre\quad\underline{\makebox[20em][s]{%
-            \makebox[20em][c]{\fs{\@coadvisorname}}}}\\%
-        \fi
-        \sanhao\durationpre\quad\underline{\makebox[20em][s]{
-            \makebox[20em][c]{\fs{\@duration}}}}\\%
-        \sanhao\addresspre\quad\underline{\makebox[20em][s]{
-            \makebox[20em][c]{\fs{\@address}}}} \\
+        %\ifbcoadvisor
+        %\sanhao\coadvisorpre\quad\underline{\makebox[20em][s]{%
+        %    \makebox[20em][c]{\fs{\@coadvisorname}}}}\\%
+        %\fi
+        \sanhao\ming\durationpre\underline{\makebox[20em][s]{
+            \makebox[20em][c]{\ming{\@duration}}}}\\%
+        \sanhao\ming\addresspre\underline{\makebox[20em][s]{
+            \makebox[20em][c]{\ming{\@address}}}} \\
       \end{tabular}
       %\vfill
       %{\sanhao\today \par}
@@ -626,20 +630,20 @@ BoldItalicFont=timesbi.ttf
   \phantomsection
   \addcontentsline{toc}{chapter}{\@abstracttitletoc}
   \ifbachelordegree
-  \renewcommand{\newtitleline}{\\}
-  %\chapter*{\@title}
-
-  \vspace*{10pt}
-  \begin{center}
-    \xiaoerhao \hei\@title
-  \end{center}
-
-  \begin{flushright}
-    \begin{tabular}[h]{ll}
-      \@studentid & \kai\@author \\
-      \advisorpre & \kai\@advisorname \\
-    \end{tabular}
-  \end{flushright}
+%  \renewcommand{\newtitleline}{\\}
+%  %\chapter*{\@title}
+%
+%  \vspace*{10pt}
+%  \begin{center}
+%    \xiaoerhao \hei\@title
+%  \end{center}
+%
+%  \begin{flushright}
+%    \begin{tabular}[h]{ll}
+%      \@studentid & \kai\@author \\
+%      \advisorpre & \kai\@advisorname \\
+%    \end{tabular}
+%  \end{flushright}
   %\vspace*{30pt}
 
   \begin{center}
@@ -652,14 +656,16 @@ BoldItalicFont=timesbi.ttf
   \chapter*{\@abstracttitle}
   \fi
   \song
+  \linespacing{1.5}
   \ifbachelordegree
   \xiaosihao
   \else
   \wuhao
   \fi
 }{
-  \\[1\baselineskip]
-  \textbf{关键词：} \@keywords
+
+\vspace*{1\baselineskip}
+ \noindent\textbf{关键词：} \@keywords
 }
 \newenvironment{englishabstract}[1]
 {
@@ -669,17 +675,17 @@ BoldItalicFont=timesbi.ttf
   \addcontentsline{toc}{chapter}{Abstract}
   \ifbachelordegree
 
-  \vspace*{10pt}
-  \begin{center}
-    \xiaoerhao \textbf{\@titleeng}
-  \end{center}
-
-  \begin{flushright}
-    \begin{tabular}[h]{ll}
-      \@studentid & \@authoreng \\
-      Advisor & \@advisornameeng \\
-    \end{tabular}
-  \end{flushright}
+%  \vspace*{10pt}
+%  \begin{center}
+%    \xiaoerhao \textbf{\@titleeng}
+%  \end{center}
+%
+%  \begin{flushright}
+%    \begin{tabular}[h]{ll}
+%      \@studentid & \@authoreng \\
+%      Advisor & \@advisornameeng \\
+%    \end{tabular}
+%  \end{flushright}
 
   \begin{center}
     {\xiaoerhao \textbf{Abstract}}
@@ -689,14 +695,16 @@ BoldItalicFont=timesbi.ttf
   \chapter*{Abstract}
   \fi
   \song
+  \linespacing{1.0}
   \ifbachelordegree
   \xiaosihao
   \else
   \wuhao
   \fi
 }{
-  \\[1\baselineskip]
-  \textbf{KEY WORDS:} \@keywords
+  
+\vspace*{1\baselineskip}
+ \noindent\textbf{KEY WORDS:} \@keywords
 }
 
 
