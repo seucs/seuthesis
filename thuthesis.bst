@@ -14,6 +14,7 @@ ENTRY
     journal
     key
     lang
+    lastchecked
     modifydate
     month
     note
@@ -28,6 +29,7 @@ ENTRY
     volume
     year
     url
+    typeoflit
   }
   {}
   { label }
@@ -498,11 +500,20 @@ FUNCTION {format.modifydate}
 }
 
 FUNCTION {format.citedate}
-{ new.block "[" citedate * "]" * }
+{ new.block  citedate *}
 
 FUNCTION {format.onlinemark}
 { "[EB/OL]" }
 
+
+FUNCTION {format.bookmark}
+{ "[M]" }
+
+FUNCTION {format.processingmark}
+{ "[C]" }
+
+FUNCTION {format.reportmark}
+{ "[R]" }
 
 INTEGERS { multiresult }
 
@@ -777,7 +788,7 @@ FUNCTION {book}
     }
   if$
   new.block
-  format.btitle "title" output.check
+  format.btitle remove.dots format.bookmark * output
   crossref missing$
     { format.bvolume output
       new.block
@@ -910,11 +921,13 @@ FUNCTION {incollection}
   fin.entry
 }
 
+
+
 FUNCTION {inproceedings}
 { output.bibitem
   format.authors "author" output.check
   new.block
-  format.title "title" output.check
+  format.title remove.dots format.processingmark * output
   new.block
   crossref missing$
     { format.in.ed.booktitle "booktitle" output.check
@@ -1052,8 +1065,8 @@ FUNCTION {online}
   format.authors output
   new.block
   format.title remove.dots format.onlinemark * output
-  format.modifydate remove.dots format.citedate * output
   format.url output
+  ", " format.citedate * output
   fin.entry
 }
 
@@ -1119,7 +1132,7 @@ FUNCTION {techreport}
 { output.bibitem
   format.authors "author" output.check
   new.block
-  format.title "title" output.check
+  format.title remove.dots format.reportmark * output
   new.block
   format.tr.number output.nonnull
   institution "institution" output.check

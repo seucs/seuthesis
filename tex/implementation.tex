@@ -30,7 +30,7 @@
 
 \subsection{Reporter}
 
-\par Reporter的功能是将读取文件的信息：文件URI、偏移量、读取长度，上传给CW-Master。第~\ref{chp:simple-solution}章提到的简单方案是需要上层应用提供访问的列的语义信息，也就是使得CW-Cache得知应用具体访问的列。在~\ref{subsec:simp-analysis}小节我们提到，我们放弃采用这种方法，是因为它需要上层计算框架与中间层的耦合，不符合软件设计模块化、低耦合的原则。我们想要在中间层实现列级别的负载均衡，利用尽可能少的信息，而Alluxio原本提供的读文件的接口就是接受文件URI、偏移量、读取长度这三个参数。所以，为了方便代码实现，减少代码的耦合度，我们放弃了让上层将Parquet文件的语义信息传给Alluxio的想法，转为利用这三个参数构成的更加底层的信息，我们将之称为“文件片段”。Alluxio Client在读取文件的时候，只是将文件URI通过远程调用传给Master，Master返回文件所在的workers，Client去相应的worker找到文件，根据偏移量和读取长度读取应用需要的部分，也就是说，偏移量和读取长度仅Client可见。为了实现这个Reporter，我们添加了一个远程调用，将这三样信息一起传给Master。Alluxio 1.8.0版本使用Apache Thrift作为远程调用框架，我们在定义接口的thrift文件里定义：
+\par Reporter的功能是将读取文件的信息：文件URI、偏移量、读取长度，上传给CW-Master。第~\ref{chp:column-aware}章提到的简单方案是需要上层应用提供访问的列的语义信息，也就是使得CW-Cache得知应用具体访问的列。在~\ref{subsec:simp-analysis}小节我们提到，我们放弃采用这种方法，是因为它需要上层计算框架与中间层的耦合，不符合软件设计模块化、低耦合的原则。我们想要在中间层实现列级别的负载均衡，利用尽可能少的信息，而Alluxio原本提供的读文件的接口就是接受文件URI、偏移量、读取长度这三个参数。所以，为了方便代码实现，减少代码的耦合度，我们放弃了让上层将Parquet文件的语义信息传给Alluxio的想法，转为利用这三个参数构成的更加底层的信息，我们将之称为“文件片段”。Alluxio Client在读取文件的时候，只是将文件URI通过远程调用传给Master，Master返回文件所在的workers，Client去相应的worker找到文件，根据偏移量和读取长度读取应用需要的部分，也就是说，偏移量和读取长度仅Client可见。为了实现这个Reporter，我们添加了一个远程调用，将这三样信息一起传给Master。Alluxio 1.8.0版本使用Apache Thrift作为远程调用框架，我们在定义接口的thrift文件里定义：
 
 \begin{lstlisting}[language=c]
 struct UploadFileSegmentsAccessInfoTResponse{
@@ -96,7 +96,7 @@ public class FileAccessInfo {
 
 \subsection{Replication Manager}
 
-\par Replication Manager根据Recorder记录的统计信息，运行第~\ref{chp:cw-cache}章中描述的关于Bundle-K方案中的算法，决定$K$和复制数量$r$， 是CW-Cache系统的核心部分，并将需要复制的部分取出作为新的文件缓存在集群中。为此，我们在原Alluxio Master模块中添加了\verb|repl| 模块，其核心是\verb|ReplManager| 类。在~\ref{subsec:impl-recorder}小节中描述的Recorder实际是属于这个类的，这个类的成员变量主有：
+\par Replication Manager根据Recorder记录的统计信息，运行第~\ref{chp:cw-cache}章中描述的关于Bundle-K方案中的算法，决定$K$和复制数量$r$， 是CW-Cache系统的核心部分，并将需要复制的部分取出作为新的文件缓存在集群中。为此，我们在原Alluxio Master模块中添加了\verb|repl| 模块，其核心是\verb|ReplManager| 类。在~\ref{subsec:impl-recorder}小节中描述的Recorder实际是属于这个类的，这个类的成员变量主要有：
 
 \begin{lstlisting}[language=java]
 private FRClient frClient;
@@ -119,4 +119,6 @@ private int checkInterval; /* in seconds */
 
 \section{系统额外开销}
 
-\par 元数据。
+\par 元数据的存储开销。为了统计文件片段的热度信息，Master需要在内存中维持一部分元数据。对于每一个Parquet文件（可以是某一个Parquet文件的一部分）来说，CW-Cache Master要维护它被访问过的文件片段（由偏移量和读取长度构成）的计数器，以及原文件片段和复制过后的文件片段（可能是多个）的映射。这部分元数据，我们仅保留一段时间的，而不是历史累加，毕竟访问模式一直在变化，目前实现中是12小时复制分发一次，那么这些元数据就维护12小时，之后便重新统计。相对于Alluxio本身维护的文件的元数据来说，这些开销是很小的。
+
+\par 计算开销。求出复制的列的数量$K$和复制的份数$r$的这个过程是我们的系统实现中的主要开销。第~\ref{sec:alg}节的理论表明，算法的时间内复杂度是$O(m\log{m} + n)$，$m$是访问模式的数量，$n$是列的数量，整个过程中也采用了不少近似处理，计算并不复杂。这个计算在目前的实现中是12小时进行一次，并且我们可以根据经验把这个时间设置为类似深夜这样的少有人使用系统的时间，这样的话计算开销的影响就极小了。

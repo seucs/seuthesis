@@ -1,3 +1,52 @@
 \chapter{测试与评估}
 
-\par 本章中我们对我们实现的采用Bundle-K方案的CW-Cache系统进行测试与评估。
+\par 本章中我们对我们实现的采用Bundle-K方案的CW-Cache系统进行初步的测试与评估。
+
+\section{实验方法}
+
+\subsection{实验环境设置}
+
+\par 我们在一个6节点的Amazon EC2的集群中搭建Spark、CW-Cache、HDFS组成的平台，其中1台作为Master，其他作为Worker，每个节点是r3.xlarge，各自有4个CPU， ，30.5 GB内存。我们使用iPerf测得节点之间的网络带宽是1Gbps。我们在平台上用Spark执行标准测试程序TPC-H提供的SQL查询任务，观察各项指标。应用均在Master上进行提交。
+
+\par 实验中所用的数据是利用TPC-H标准测试程序生成的规模为10的数据，我们利用Spark将其转换为了Parquet格式以进行实验。
+
+\subsection{负载}
+
+\par 我们在第~\ref{chp:cw-cache}章就观察到，执行TPC-H提供的任务便能够造成列的访问热度倾斜，在本评估实验中，我们将TPC-H的22个查询任务依次执行若干次，Master在这个过程中会对访问的文件片段进行记录，一段时间内收集的信息便可供CW-Cache进行“列级别”的复制。在这之后，我们会控制应用程序随机启动TPC-H中的任务。
+
+\subsection{基准}
+
+\par 本测试中，我们选择最基本的固定大小分块的方案进行对比，这个方法是很多分布式缓存/存储系统常常采用的，比如HDFS、Windows Azure Storage和Alluxio。在固定大小分块方案中，文件被分成固定大小的文件块，存储在集群中。因为我们的方案是基于Alluxio构建的，因此我们采用原生Alluxio作为CW-Cache方案的对照。
+
+\section{实验结果}
+
+\subsection{读取延迟}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.70\paperwidth]{img/evaluation/query-execution-time}
+	\caption{任务执行时间比较。}
+	\label{fig:q-exe}
+	%\vspace{-.15in}
+\end{figure}
+
+\par 图~\ref{fig:q-exe}是我们得到的两个方案的查询任务的执行时间。由图可以看出，两条曲线的趋势基本一致，我们的CW-Cache比原生Alluxio系统要略好一点，最好的能降低延迟达25\% ，有的则不如原生Alluxio，我想可能的原因有：1) 有一部分任务属于计算密集型而不是I/O密集型，其瓶颈在于CPU，我们的方案需要上传访问信息，反而增加Client与Master的通信开销，导致比原生Alluxio稍慢；2) 其次系统是初步实现，还未进行优化，本身性能还为达到令人满意的地步。
+
+\subsection{负载}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.70\paperwidth]{img/evaluation/server-load}
+	\caption{两种场景下的负载的分布。服务器的负载按照总的数据读取量计算。}
+	\label{fig:server-load}
+	%\vspace{-.15in}
+\end{figure}
+
+\par 图~\ref{fig:server-load}展示了按照服务器负载大小排序后的服务器负载分布。由图可见，CW-Cache优于原生方案。如果我们我们用\emph{不均衡因子}衡量负载不均衡的程度，它被定义为：
+\begin{equation}
+    \textstyle \eta = \frac{L_{\mathrm{max}}-L_{\mathrm{avg}}}{L_{\mathrm{avg}}},
+\end{equation}
+其中 $L_{\mathrm{max}}$ 和 $L_{\mathrm{avg}}$ 分别是服务器中最大的和平均负载，值更小的$\eta$表明更好的负载均衡。
+
+\par 那么我们的实验中CW-Cache方案比原生Alluxio方案好26\%。
+

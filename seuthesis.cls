@@ -177,7 +177,7 @@ BoldItalicFont=timesbi.ttf
 
 
 \setlength{\parskip}{0pt}% 段距
-\newcommand{\mainlineskip}{1.571}% CHANGE 主行距1.385
+\newcommand{\mainlineskip}{1.571}% CHANGE 主行距1.385, 1.571, 1.42
 \titlespacing{\section}{0pt}{3.5ex plus .05ex minus .01ex}{2.9ex plus .04ex} % 标题间距
 \titlespacing{\subsection}{0pt}{3ex plus .05ex minus .01ex}{2ex plus .04ex}
 \titlespacing{\subsubsection}{0pt}{1.5ex plus .05ex minus .01ex}{1ex plus .01ex}
