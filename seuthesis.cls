@@ -167,7 +167,8 @@ BoldItalicFont=timesbi.ttf
   }
 \AtEndDocument{\backcover}
 
-\RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}%这里加bindingoffset=0.5cm就是打印版本
+% \RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}%这里加bindingoffset=0.5cm就是打印版本
+\RequirePackage[top=2.45cm,bottom=3cm,left=2cm,right=2cm]{geometry}%这里加bindingoffset=0.5cm就是打印版本
 \RequirePackage[pagestyles, rm]{titlesec}
 \RequirePackage{titletoc} % 设置目录
 \hypersetup{bookmarksnumbered=true}%书签中章节编号
@@ -247,6 +248,16 @@ BoldItalicFont=timesbi.ttf
   \renewcommand{\@advisortitle}{#2}
   \renewcommand{\@advisornameeng}{#3}
   \renewcommand{\@advisortitleeng}{#4}
+}
+\newcommand{\@enterpriseadvisorname}{}
+\newcommand{\@enterpriseadvisortitle}{}
+\newcommand{\@enterpriseadvisornameeng}{}
+\newcommand{\@enterpriseadvisortitleeng}{}
+\newcommand{\enterpriseadvisor}[4]{
+  \renewcommand{\@enterpriseadvisorname}{#1}
+  \renewcommand{\@enterpriseadvisortitle}{#2}
+  \renewcommand{\@enterpriseadvisornameeng}{#3}
+  \renewcommand{\@enterpriseadvisortitleeng}{#4}
 }
 \newif\ifbcoadvisor\bcoadvisorfalse
 \newcommand{\@coadvisorname}{}
@@ -563,7 +574,9 @@ BoldItalicFont=timesbi.ttf
         \sanhao\ming\studentnamepre\underline{\makebox[20em][s]{%
             \makebox[20em][c]{\ming{\@author}}}} \\
         \sanhao\advisorpre\underline{\makebox[20em][s]{%
-            \makebox[20em][c]{\ming{\@advisorname}}}}%
+            \makebox[20em][c]{\ming{\@advisorname}}}} \\
+          \sanhao\enterpriseadvisorpre\underline{\makebox[20em][s]{%
+            \makebox[20em][c]{\ming{\@enterpriseadvisorname}}}}%
         \\
         %\ifbcoadvisor
         %\sanhao\coadvisorpre\quad\underline{\makebox[20em][s]{%

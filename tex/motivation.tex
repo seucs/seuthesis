@@ -7,9 +7,9 @@
 \label{chp:motivation}
 
 
-\par 过往的很多工作研究了文件被访问热度（skewed file popularities）差别很大的情况下集群缓存系统的负载均衡，在这些工作中，文件复制是被广泛应用的方法。例如，HDFS默认把一份文件复制为3份；当缓存服务器上发生缓存缺失（cache miss），Alluxio弹性增加热门文件在内存中的副本数。
+\par 过往的很多工作研究了文件的访问热度（skewed file popularities）差别很大的情况下集群缓存系统的负载均衡，在这些工作中，文件复制是被广泛应用的方法。例如，HDFS默认把一份文件复制为3份；当缓存服务器上发生缓存缺失（cache miss），Alluxio弹性增加热门文件在内存中的副本数。
 
-\par 然而文件复制会带来较高的内存开销，最终损害缓存带来的好处。在数据分析的工作中，批处理任务分析结构化数据情况比较多，结构化数据相比一般意义上的文件具有更多的上下文信息，其中列式存储的文件格式，比如Parquet\cite{parquet}，得到越来越多的应用，因为在数据分析的大部分任务中，通常需要读取相关列，而不是整行数据，且列式存储把相同类型的数据归在一起，压缩比可以很高。那么问题来了，针对采用列式存储的结构化数据，我们是否能够根据其特有的性质，保证负载均衡的效果的同时，降低文件复制的开销呢？以往的研究工作表明，对一小部分热门文件（被高频访问的文件）访问占据了集群总访问量的大部分，我们猜想，那么对于结构化数据来说，例如具体一张数据表，列与列之间是否存在热门程度的差异呢？如果猜想成立，直观上来说，对于一张表，我们可以只复制最热门的几列，就能达到接近复制全表的负载均衡效果，同时能够降低缓存开销。
+\par 然而文件复制会带来较高的内存开销，最终损害缓存带来的好处。在数据分析的工作中，批处理任务分析结构化数据的情况比较多，结构化数据相比一般意义上的文件具有更多的上下文信息，其中列式存储的文件格式，比如Parquet\cite{parquet}，得到越来越多的应用，因为在数据分析的大部分任务中，通常需要按列进行读取，而不是按行读取，并且列式存储把相同类型的数据归在一起，压缩比可以很高。那么问题来了，针对采用列式存储的结构化数据，我们是否能够根据其特有的性质，保证负载均衡的效果的同时，降低文件复制的开销呢？以往的研究工作表明，对一小部分热门文件（被高频访问的文件）访问占据了集群总访问量的大部分，我们猜想，那么对于结构化数据来说，例如具体一张数据表，列与列之间是否存在热门程度的差异呢？如果猜想成立，直观上来说，对于一张表，我们可以只复制最热门的几列，就能达到接近复制全表的负载均衡效果，同时能够降低缓存开销。
 
 \par 如果按照上文所述，仅复制最热门的若干列，缓存在不同的机器上，那么在执行分布式SQL任务的时候，极有可能发生表内部的数据shuffle，我们需要探究shuffle对任务执行时间的影响。直观上来说，数据shuffle带来网络通信上的开销，会降低任务执行的效率，那么在考虑被复制的列在集群里的放置策略时，我们也需要考虑列与列之间被共同访问的概率，如果两列有很大可能性会被一起访问，那么可以考虑将它们“捆绑”（bundle）在一起放置。
 
@@ -18,11 +18,11 @@
 \section{列的访问规律}
 \label{sec:col-access}
 
-\par 首先我们研究了具有代表性的基准标准测试程序TPC系列中的TPC-H，TPC-DS，TPC-xBB中的列的访问规律。
+\par 首先我们研究了具有代表性的基准标准测试程序TPC系列中的TPC-H，TPC-DS，TPC-xBB的各个数据表中的列的访问规律。
 
 \subsection{实验设置}
 
-\par 我们通过2.4.0版本的Spark SQL执行三种标准测试程序提供的查询任务。对于每一种，我们生成1 GB\footnote{这个实验与数据量无关，因为数据表的个数和每个表的访问规律不回随着表的规模而改变}的数据，数据存为Parquet格式，然后将查询任务依次提交。三种标准测试程序各自包含的数据表的数量和查询任务的数量总结在表格~\ref{tab:setup}中。当执行查询任务的时候，我们记录对列的访问数据，以此来分析列级别的数据访问的性质。我们从结果中观察到以下两个现象。
+\par 我们通过2.4.0版本的Spark SQL执行三种标准测试程序提供的查询任务。对于每一种，我们生成1 GB\footnote{这个实验与数据量无关，因为数据表的个数和每个表的访问规律不回随着表的规模而改变}的数据，数据存储为Parquet格式，然后将查询任务依次提交。三种标准测试程序各自包含的数据表的数量和查询任务的数量总结在表格~\ref{tab:setup}中。当执行查询任务的时候，我们记录对列的访问数据，以此来分析列级别的数据访问的性质。我们从结果中观察到以下两个现象。
 
 \begin{figure}[t]
 	\centering
@@ -39,7 +39,7 @@
 \begin{table}[tbp]
     \centering
     \caption{三种标准测试程序的数据}
-      \begin{tabularx}{.5\textwidth}{|l|X|X|X|r|}
+      \begin{tabularx}{.7\textwidth}{|l|X|X|X|r|}
       \hline
       \textbf{标准测试程序} & \textbf{表的数量} & \textbf{查询任务的数量}  \bigstrut\\ %
       \hline
@@ -94,24 +94,24 @@
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
         \includegraphics[width=1\textwidth]{img/motivation/tpc-ds-store_sales}
-        \caption{The $store\_sales$ table in TDC-DS.}
+        \caption{TDC-DS中的 $store\_sales$ 表。}
         \label{fig:ds_count_cdf}
     \end{subfigure}%
 
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
         \includegraphics[width=1\textwidth]{img/motivation/tpc-h-orders}
-        \caption{The $orders$ table in TDC-H.}
+        \caption{TDC-H中的 $orders$ 表。}
         \label{fig:h_count_cdf}
     \end{subfigure}%
 
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
         \includegraphics[width=1\textwidth]{img/motivation/tpc-bb-store_sales}
-        \caption{The $store\_sales$ table in TDC-xBB.}
+        \caption{TDC-xBB中的 $store\_sales$ 表。}
         \label{fig:bb_count_cdf}
     \end{subfigure}%
-    \caption{Access heat maps of representative tables in the three benchmarks.}
+    \caption{三种标准测试程序中具有代表性的数据表的访问热图。}
     \label{fig:heatmap}
     %\vspace{-.1in}
 \end{figure}
@@ -119,12 +119,12 @@
 \section{列之间的数据shuffle}
 \label{sec:data-shuffle}
 
-\par 从~\ref{sec:col-access}节中观察到的现象我们获悉，每张数据表中一小部分的列非常热门，访问频率很高。如果我们复制这一小部分热门的列，并将它们缓存在不同的机器上，那么当SQL查询任务在分布式环境中执行时，这些热门的列很容易引起集群节点之间的数据shuffling。我们推测，这种shuffling给任务执行时间带来的影响是不可忽视的，为了展示列这一级别的网络开销，我们做了一个实验，测量一个小集群中列的热门程度与数据shuffling的关系。
+\par 从~\ref{sec:col-access}节中观察到的现象我们获悉，每张数据表中一小部分的列非常热门，访问频率很高。如果我们复制这一小部分热门的列，并将它们缓存在不同的机器上，那么当SQL查询任务在分布式环境中执行时，这些热门的列很容易引起集群节点之间的数据shuffle。我们推测，这种shuffe给任务执行时间带来的影响是不可忽视的，为了展示列这一级别的网络开销，我们做了一个实验，测量一个小集群中列的热门程度与数据shuffle的关系。
 
 \subsection{实验设置}
 \label{subsec:data-shuffle-setup}
 
-\par 我们部署了一个含有1个master和2个worker的小集群，所用的实例是c5.4xlarge，每一个有32 GB内存和16个CPU核，通过iperf3测试，小集群的网络带宽是10 Gbps。我们在集群上部署了Alluxio以及Spark，运行TPC-H标准测试程序。在实验中，只有一台worker缓存有6 GB的Parquet格式的数据，因此集群里每次执行查询任务都会引发从有数据的机器到没有数据的机器的数据shuffling。我们关闭了Spark和Alluxio的数据被动缓存功能，一个一个按顺序执行标准测试程序里的查询任务，保证每一次执行都会有数据shuffling。我们会记录每一列的总shuffle量。
+\par 我们部署了一个含有1个master和2个worker的小集群，所用的实例是c5.4xlarge，每一个有32 GB内存和16个CPU核，通过iperf3测试，小集群的网络带宽是10 Gbps。我们在集群上部署了Alluxio以及Spark，运行TPC-H标准测试程序。在实验中，只有一台worker缓存有6 GB的Parquet格式的数据，因此集群里每次执行查询任务都会引发从有数据的机器到没有数据的机器的数据shuffle。我们关闭了Spark和Alluxio的数据被动缓存功能，一个一个按顺序执行标准测试程序里的查询任务，保证每一次执行都会有数据shuffle。我们会记录每一列的总shuffle量。
 
 \begin{figure}[htbp]
 	\centering
@@ -150,7 +150,7 @@
 
 \subsection{每一列的数据shuffle}
 
-\par 图~\ref{fig:pop-shf}展示了上述实验的结果，其中图~\ref{fig:pop-shf-a}展示了列级别的数据shuffle量，TPC-H标准格式程序中53列按照它们的热门程度排序。因为热门的列被频繁访问，并且我们发现通常来说热门的列比冷门的列的体积更大，所以热门的列相比冷门的列引起更多的数据shuffle。根据图~\ref{fig:pop-shf-b}展示的分布，总体来说，查询任务产生的数据shuffle主要来自热门的列，比如接近90\%的数据shuffle量是由30\%最热门的列贡献的。
+\par 图~\ref{fig:pop-shf}展示了上述实验的结果，其中图~\ref{fig:pop-shf-a}展示了列这一级别的数据shuffle量，TPC-H标准格式程序中的53列（所有表中的）按照它们的热门程度排序。因为热门的列被频繁访问，并且我们发现通常来说热门的列比冷门的列的体积更大，所以热门的列相比冷门的列引起更多的数据shuffle。根据图~\ref{fig:pop-shf-b}展示的分布，总体来说，查询任务产生的数据shuffle主要来自热门的列，比如接近90\%的数据shuffle量是由30\%最热门的列贡献的。
 
 \section{数据shuffle的影响}
 \label{sec:shuffle-impact}
