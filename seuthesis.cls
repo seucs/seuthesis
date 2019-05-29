@@ -772,6 +772,7 @@ BoldItalicFont=timesbi.ttf
   \orig@bibliography{#1}
   \pagestyle{seustyle}\clearpage % 使参考文献使用 seunolabel 页面样式
   \pagestyle{seufrontstyle}} % 恢复原有样式给后续部分
+
 \newenvironment{Acknowledgement}[1][\@acknowledgementtitle]
 {%
   \stcleardp

@@ -4,7 +4,7 @@
 \par 根据第~\ref{chp:motivation}章的实验和第~\ref{chp:column-aware}章对Column-aware方案的分析，我们了解到方案的一些需求：
 \begin{itemize}
     \item 方案需要根据数据表中各个列的热度（访问频率）决定哪一些列需要被复制，复制多少份。
-    \item 如果复制后的列的副本分开存储，执行SQL查询任务时会引起shuffling，且shuffling会对任务执行时间产生不可小觑的影响，我们设计的方案需要尽力避免。
+    \item 如果复制后的列的副本分开存储，执行SQL查询任务时会引起shuffle，且shuffle会对任务执行时间产生不可小觑的影响，我们设计的方案需要尽力避免。
     \item 方案应该尽可能减少上层计算框架和中间缓存系统的耦合度，缓存系统利用的额外信息要尽可能少。
 \end{itemize}
 
