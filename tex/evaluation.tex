@@ -6,7 +6,7 @@
 
 \subsection{实验环境设置}
 
-\par 我们在一个6节点的Amazon EC2的集群中搭建Spark、CW-Cache、HDFS组成的平台，其中1台作为Master，其他作为Worker，每个节点是r3.xlarge，各自有4个CPU， ，30.5 GB内存。我们使用iPerf测得节点之间的网络带宽在740Mbps和1Gbps的范围内。我们在平台上用Spark执行标准测试程序TPC-H提供的SQL查询任务，观察各项指标。所有的查询任务均在Master上进行提交。
+\par 我们在一个6节点的Amazon EC2的集群中搭建Spark、CW-Cache、HDFS组成的平台，其中1台作为Master，其他作为Worker，每个节点是r3.xlarge，各自有4个CPU，30.5 GB内存。我们使用iPerf测得节点之间的网络带宽在740Mbps和1Gbps的范围内。我们在平台上用Spark执行标准测试程序TPC-H提供的SQL查询任务，观察各项指标。所有的查询任务均在Master上进行提交。
 
 \par 实验中所用的测试数据是利用TPC-H标准测试程序工具包生成的规模为$10$的数据，我们利用Spark将其转换为了Parquet格式以进行实验。
 
@@ -46,7 +46,7 @@
 	%\vspace{-.15in}
 \end{figure}
 
-\par 图~\ref{fig:q-exe}是我们得到的两个方案的查询任务的执行时间。由图可以看出，两条曲线的趋势基本一致，我们的CW-Cache比原生Alluxio系统要略好一点，根据计算可知，$\textstyle \text{Time reduction} = 12\%$，即TPC-H查询任务的执行时间平均降低12\%。多数任务的执行时间降低，但是也有任务执行时间增加，我想可能的原因有：1) 有一部分任务属于计算密集型而不是I/O密集型，其瓶颈在于CPU，我们的方案需要上传访问信息，反而增加Client与Master的通信开销，导致比原生Alluxio稍慢；2) 其次系统是初步实现，还未进行优化，本身性能还为达到令人满意的地步，说明还有很多细节亟待完善。
+\par 图~\ref{fig:q-exe}是我们得到的两个方案的查询任务的执行时间。由图可以看出，两条曲线的趋势基本一致，我们的CW-Cache比原生Alluxio系统要略好一点，综合这22个SQL任务来看，根据计算可知，平均的$\textstyle \text{Time reduction} = 12\%$，即TPC-H查询任务的执行时间平均降低12\%。多数任务的执行时间降低，但是也有任务执行时间增加，我想可能的原因有：1) 有一部分任务属于计算密集型而不是I/O密集型，其瓶颈在于CPU，我们的方案需要上传访问信息，反而增加Client与Master的通信开销，导致比原生Alluxio稍慢；2) 其次系统是初步实现，还未进行优化，本身性能还为达到令人满意的地步，说明还有很多细节亟待完善。
 
 \subsection{负载}
 
@@ -58,5 +58,5 @@
 	%\vspace{-.15in}
 \end{figure}
 
-\par 图~\ref{fig:server-load}展示了按照服务器负载大小排序后的服务器负载分布。由图可见，CW-Cache优于原生方案。根据\eqref{eq:ld-im}式可以计算出$\eta = 26\%$，一定程度上说明CW-Cache对系统负载均衡有所贡献。
+\par 图~\ref{fig:server-load}展示了按照服务器负载大小排序后的服务器负载分布。由图可见，CW-Cache优于原生方案。根据\eqref{eq:ld-im}式可以计算出$\eta_a = 0.7398$，$\eta_cw = 0.4442$，那么负载不均衡度减小了$0.26$，一定程度上说明CW-Cache对系统负载均衡有所贡献。
 
