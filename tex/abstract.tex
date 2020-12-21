@@ -1,0 +1,14 @@
+%# -*- coding: utf-8-unix -*-
+%%==================================================
+%% abstract.tex for seuthesis Bachelor Thesis
+%%==================================================
+
+\begin{abstract}{集群缓存，列级别，负载均衡，结构化数据}
+
+    目前越来越多的数据密集型集群部署内存计算方案来提高I/O性能，在集群内存使用缓存是一种普遍做法。然而负载不均这一集群缓存中常见的问题则会损害缓存带来的好处。学术界应对这一问题的方法包括将热门的文件复制多份、用存储编码为文件创建同等分区、选择性地将文件分割成多份来分散存储。然而这些方法均关注一般意义上的文件的负载均衡，而本文关注的是结构化数据的负载均衡，根据数据表中各个列的访问热度倾斜实现列级别的负载均衡。我们的解决方案称为CW-Cache，将数据表中访问热度排在前$K$的列一起复制$r$份缓存在集群中。我们通过数学建模，在数据表各个列的热度确定的情况下，高效地计算出最优的$K$和$r$——二者太小不足以实现负载均衡，太大则会增大内存开销。我们在分布式内存文件系统Alluxio上实现了CW-Cache，评估表明相比原生Alluxio，我们的CW-Cache系统能够降低SQL任务执行时间达平均12\%，负载不均衡程度优化26\%。
+    \end{abstract}
+    
+    \begin{englishabstract}{Cluster Cache, Column-wise, Load Balancing,  Structured Data}
+    
+    Nowadays, more and more data-intensive clusters employ in-memory solutions to improve I/O performance and a common approach is using cache in cluster memories. Nevertheless, routinely observed load imbalance will degrade the benefits of caching. Solutions that the academic deal with this problem include copying multiple replicas of hot files, creating parity chunks using storage codes and selectively partitioning files and caching them across  the clusters. Yet, they focus on load balance of general files, while this paper cares about load balance of structured data. We aimed to achieve column-wise load balance based on the skewed popularities of columns. Our solution, called CW-Cache, bundle columns with their popularities in the top $K$ list with a replicative factor of $r$. Through modeling, we effectively calculate the optimal $K$ and $r$ given popularities of each column -- too small leads to load imbalance, while too large results in high memory costs. We implemented CW-Cache atop Alluxio, a popular in-memory distributed storage for data-intensive clusters. Our evaluation shows that, compared with Alluxio, CW-Cache could reduce SQL query execution time by 12\% in average and improve load balancing by around 26\%.
+    \end{englishabstract}

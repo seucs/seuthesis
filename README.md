@@ -1,8 +1,8 @@
 # seuthesis
 
 ### 下载地址
-* [点此下载](https://github.com/a367/seuthesis-2/releases/latest)
-* [在线预览](https://github.com/a367/seu-latex/blob/master/main.pdf)
+* [点此下载](https://github.com/SimonZYC/seuthesis/releases)
+* [在线预览](https://github.com/SimonZYC/seuthesis/blob/master/main.pdf)
 
 
 
@@ -12,7 +12,7 @@
 * 目前只重点修改本科论文的部分，研究生论文版式不保证与学校要求相同。
 
 ### LaTeX 发行版
-1. [Windows - Texlive 2016](http://tug.org/texlive/files/texlive2016.iso.torrent)
+1. [Windows - Texlive](https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/)
 2. [Mac OS - MacTex](https://tug.org/mactex/)
 3. 会用 Linux 写论文的人应该已经安装了 LaTeX
 
@@ -20,3 +20,17 @@
 1. [Windows + LaTeX + sublime text 3 + Sumatra PDF](http://www.360doc.com/content/14/0517/19/9206388_378573988.shtml)
 2. [Mac OS + LaTeX + sublime text 3 + Skim PDF](https://www.zhihu.com/question/23918126)
 3. 会用 Linux 写论文的人应该已经配好了工作环境
+
+### 使用
+```bash
+cd <project-path>
+make
+# Compile
+
+make clean
+# delete intermediate files
+
+make wordcount
+# count words in main.tex
+```
+

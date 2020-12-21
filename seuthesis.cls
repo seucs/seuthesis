@@ -163,7 +163,8 @@ BoldItalicFont=timesbi.ttf
   }
 \AtEndDocument{\backcover}
 
-\RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+% \RequirePackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\RequirePackage[top=2.45cm,bottom=3cm,left=2cm,right=2cm]{geometry}%这里加bindingoffset=0.5cm就是打印版本
 \RequirePackage[pagestyles, rm]{titlesec}
 \RequirePackage{titletoc} % 设置目录
 \hypersetup{bookmarksnumbered=true}%书签中章节编号
@@ -173,7 +174,7 @@ BoldItalicFont=timesbi.ttf
 
 
 \setlength{\parskip}{0pt}% 段距
-\newcommand{\mainlineskip}{1.3}% 主行距1.3
+\newcommand{\mainlineskip}{1.571}% 主行距1.3
 \titlespacing{\section}{0pt}{3.5ex plus .05ex minus .01ex}{2.9ex plus .04ex} % 标题间距
 \titlespacing{\subsection}{0pt}{3ex plus .05ex minus .01ex}{2ex plus .04ex}
 \titlespacing{\subsubsection}{0pt}{1.5ex plus .05ex minus .01ex}{1ex plus .01ex}
@@ -203,8 +204,8 @@ BoldItalicFont=timesbi.ttf
   urlcolor=magenta
 }
 \newpagestyle{seustyle}{
-  \sethead[][{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}][\song{}\xiaowuhao{}第\thepage 页] % 偶数页
-  {}{{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}}{\song{}\xiaowuhao{}第\thepage 页} % 奇数页
+  \sethead[][{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}][\song{}\xiaowuhao{}第\thepage 页] % 偶数页
+  {}{{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}}{\song{}\xiaowuhao{}第\thepage 页} % 奇数页
   \setfoot{}{}{}
   \headrule
 }
@@ -212,8 +213,8 @@ BoldItalicFont=timesbi.ttf
   \pagestyle{seunolabelstyle}
 }
 \newpagestyle{seunolabelstyle}{
-  \sethead[][{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}][]
-  {}{{\song{}\xiaowuhao{}东南大学2017届本科生毕业设计（论文）}}{}
+  \sethead[][{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}][]
+  {}{{\song{}\xiaowuhao{}东南大学2019届本科生毕业设计（论文）}}{}
   \setfoot{}{}{}
   \headrule
 }
@@ -314,7 +315,7 @@ BoldItalicFont=timesbi.ttf
   \hypersetup{
     pdfauthor={\@author},
     pdftitle={\universityname{}\@academicdegree}, %文件标题
-    pdfsubject={\@title \@subtitle}, %文件主题
+    pdfsubject={\@title}, %文件主题
     pdfcreator={The \seuthesis{} class (v \fileversion)} % 应用程序
   }
 
@@ -532,7 +533,7 @@ BoldItalicFont=timesbi.ttf
       
       % my change
       {\xiaoerhao\song\titlepre}
-      {\erhao\song \parbox[t]{16em}{\fs\uline{\hfill \@title \hfill}}}\\
+      {\erhao\song \parbox[t]{12em}{\fs\uline{\hfill \@title \hfill}}}\\
     
 
       \vspace*{40pt}
@@ -643,7 +644,7 @@ BoldItalicFont=timesbi.ttf
   %\vspace*{30pt}
 
   \begin{center}
-    \xiaoerhao \hei\@abstracttitle
+    \xiaoerhao \song\@abstracttitle
   \end{center}
   %\vspace*{30pt}
 
@@ -659,7 +660,7 @@ BoldItalicFont=timesbi.ttf
   \fi
 }{
   \\[1\baselineskip]
-  \textbf{关键词：} \@keywords
+  关键词： \@keywords
 }
 \newenvironment{englishabstract}[1]
 {
@@ -682,7 +683,7 @@ BoldItalicFont=timesbi.ttf
   \end{flushright}
 
   \begin{center}
-    {\xiaoerhao \textbf{Abstract}}
+    {\xiaoerhao Abstract}
   \end{center}
   \par
   \else
@@ -696,7 +697,7 @@ BoldItalicFont=timesbi.ttf
   \fi
 }{
   \\[1\baselineskip]
-  \textbf{KEY WORDS:} \@keywords
+  KEY WORDS: \@keywords
 }
 
 
@@ -750,7 +751,9 @@ BoldItalicFont=timesbi.ttf
 \renewcommand{\bibliography}[1]{
   \orig@bibliography{#1}
   \pagestyle{seustyle}\clearpage % 使参考文献使用 seunolabel 页面样式
-  \pagestyle{seufrontstyle}} % 恢复原有样式给后续部分
+  \pagestyle{seufrontstyle}
+  } % 恢复原有样式给后续部分
+  
 \newenvironment{Acknowledgement}[1][\@acknowledgementtitle]
 {%
   \stcleardp
@@ -786,8 +789,6 @@ BoldItalicFont=timesbi.ttf
 \ifbachelordegree
 \renewcommand{\backcover}{}
 \fi
-
-
 \endinput
 %%
 %% End of file `seuthesis.cls'.

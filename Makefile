@@ -1,77 +1,45 @@
-#
-# Copyright (C) 2007 by Xu Yuan <xuyuan.cn@gmail.com>
-# $Id$
-#
-# This file is part of the SEU-Thesis package project.
-# ---------------------------------------------------
-#
-# This file may be distributed and/or modified under the
-# conditions of the LaTeX Project Public License, either version 1.3a
-# of this license or (at your option) any later version.
-# The latest version of this license is in:
-# 
-# http://www.latex-project.org/lppl.txt
-# 
-# and version 1.3a or later is part of all distributions of LaTeX 
-# version 2004/10/01 or later.
-#
+THESIS = main
+# TEX, BIB, TEST dir
+TEX_DIR = tex
+BIB_DIR = bib
 
-PACKAGE=seuthesis
-SRC=${PACKAGE}.ins ${PACKAGE}.dtx
+# Option for latexmk
+LATEXMK_OPT_BASE = -xelatex -gg -silent
+LATEXMK_OPT = $(LATEXMK_OPT_BASE) -f
+LATEXMK_OPT_PVC = $(LATEXMK_OPT_BASE) -pvc
 
-MAIN=main
-MAIN_SRC=${MAIN}.tex content/*.tex content/reference.bib
+all: $(THESIS).pdf
 
-# all: package
+.PHONY : all clean pvc view wordcount git zip
 
-# main: main.pdf
+$(THESIS).pdf : $(THESIS).tex $(TEX_DIR)/*.tex *.bib seuthesis.cls seuthesis-utf8.cfg Makefile
+	-latexmk $(LATEXMK_OPT) $(THESIS)
 
-# sample: sample.pdf
+pvc :
+	latexmk $(LATEXMK_OPT_PVC) $(THESIS)
 
-# package: ${PACKAGE}.pdf
+validate :
+	xelatex -no-pdf -halt-on-error $(THESIS)
+	biber --debug $(THESIS)
 
+view : $(THESIS).pdf
+	open $<
 
-clean:
-	rm -f *.aux *.log *.toc *.ind *.inx *.gls *.glo *.idx *.ilg *.out *.bak *.bbl *.brf *.blg *.dvi *.ps *.gz
-clean_all:
-	rm -f *.aux *.log *.toc *.ind *.inx *.gls *.glo *.idx *.ilg *.out *.bak *.bbl *.brf *.blg *.dvi *.ps *.gz *.pdf
+wordcount:
+	@perl texcount.pl $(THESIS).tex -inc          | awk '/total/ {getline; print "词数    :",$$4}' 
+	@perl texcount.pl $(THESIS).tex -inc -char    | awk '/total/ {getline; print "字符数  :",$$4}' 
+	@perl texcount.pl $(THESIS).tex -inc -ch-only | awk '/total/ {getline; print "中文字数:",$$4}' 
 
-# distclean: clean
-# 	rm -f *.cls *.cfg
+clean :
+	latexmk -C
+	-@rm -f *.xdv *.bbl *.fls $(TEX_DIR)/*.xdv $(TEX_DIR)/*.aux $(TEX_DIR)/*.log $(TEX_DIR)/*.fls _tmp_.pdf *.xml 2> /dev/null || true
 
-# ${PACKAGE}.cls: ${SRC}
-# 	rm -f ${PACKAGE}.cls ${PACKAGE}-gbk.cfg ${PACKAGE}-utf8.cfg
-# 	latex ${PACKAGE}.ins
-# 	iconv -f utf8 -t gbk ${PACKAGE}-utf8.cfg > ${PACKAGE}-gbk.cfg
+s3 : $(THESIS).pdf
+	s3cmd put $< s3://sjtuthesis/README_0.7.pdf
 
-# ${PACKAGE}.idx: ${PACKAGE}.dtx
-# 	xelatex ${PACKAGE}.dtx
+git :
+	for b in "0.7.x" "0.8.x" "develop" "develop-0.7" "develop-0.8"; do git co $${b}; git push --tags -f -u gitlab $${b}; git push --tags -f -u github $${b}; git push -f -u gitcafe $${b}; done
+	git co master; git push gitlab master; git push github master; git push gitcafe master
 
-# ${PACKAGE}.bbl: ${PACKAGE}.dtx ${PACKAGE}.bib
-# 	xelatex ${PACKAGE}.dtx
-# 	bibtex ${PACKAGE}
-
-# ${PACKAGE}.ind: ${PACKAGE}.idx
-# 	makeindex -s gind ${PACKAGE}
-# #	makeindex -s gglo -o ${PACKAGE}.gls ${PACKAGE}.glo
-
-# ${PACKAGE}.pdf: ${PACKAGE}.dtx ${PACKAGE}.cls ${PACKAGE}.ind ${PACKAGE}.bbl
-# 	xelatex ${PACKAGE}.dtx
-# 	xelatex ${PACKAGE}.dtx
-
-# sample.bbl: seuthesis.bib sample.tex
-# 	xelatex sample
-# 	bibtex sample
-
-# sample.pdf: sample.tex ${PACKAGE}.cls sample.bbl
-# 	xelatex sample
-# 	xelatex sample
-
-# # rules of making main (my thesis)
-# main.bbl: main.tex content/reference.bib
-# 	xelatex main
-# 	bibtex -min-crossrefs=9000 main
-
-# main.pdf: ${MAIN_SRC} ${PACKAGE}.cls main.bbl
-# 	xelatex main
-# 	xelatex main
+zip :
+	git archive --format zip --output thesis.zip master
